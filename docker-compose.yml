@@ -1,0 +1,12 @@
+version: '3'
+services:
+  react-ui:
+    container_name: react-ui
+    build: ./${FOLDER}
+    ports:
+      - "${REACT_EXTERNAL_PORT}:${REACT_INTERNAL_PORT}"
+    stdin_open: true
+    tty: true
+    volumes:
+      - './${FOLDER}:/app'
+      - './${FOLDER}/node_modules:/app/node_modules'
