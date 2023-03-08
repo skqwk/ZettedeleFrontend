@@ -13,28 +13,28 @@ function App() {
         ]
     );
 
+    const [post, setPost] = useState({title: '', body: ''});
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
     const addNewPost = (e) => {
         e.preventDefault();
-        const newPost = {
-            id: Date.now(),
-            title, body
-        };
-        setPosts([...posts, newPost]);
+        setPosts([...posts, {...post, id: Date.now()}]);
+        setPost({title: '', body: ''});
     }
 
     return (
         <div className="App">
             <form>
-                <Input value={title}
-                       onChange={e => setTitle(e.target.value)}
+                <Input value={post.title}
+                       placeholder="Название поста"
+                       onChange={e => setPost({...post, title: e.target.value})}
                        type="text"
-                       placeholder="Название поста"/>
-                <Input value={body}
-                       onChange={e => setBody(e.target.value)}
+                />
+                <Input value={post.body}
+                       placeholder="Описание поста"
+                       onChange={e => setPost({...post, body: e.target.value})}
                        type="text"
-                       placeholder="Описание поста"/>
+                />
                 <Button onClick={addNewPost}>Создать пост</Button>
             </form>
 
