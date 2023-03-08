@@ -2,8 +2,7 @@ import React, {useMemo, useState} from 'react';
 import '../src/styles/App.css';
 import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
-import Select from "./components/UI/select/Select";
-import Input from "./components/UI/input/Input";
+import PostFilter from "./components/PostFilter";
 
 function App() {
     const [posts, setPosts] = useState([
@@ -14,20 +13,19 @@ function App() {
         ]
     );
 
-    const [selectedSort, setSelectedSort] = useState('');
-    const [searchQuery, setSearchQuery] = useState('');
+    const [filter, setFilter] = useState({sort: '', query: ''})
 
     const sortedPosts = useMemo(() => {
-        console.log("Получение отсортированных постов");
-        return selectedSort
-            ? [...posts].sort((a, b) => a[selectedSort].localeCompare(b[selectedSort]))
+        console.log('Sort change!')
+        return filter.sort
+            ? [...posts].sort((a, b) => a[filter.sort].localeCompare(b[filter.sort]))
             : posts;
-    }, [selectedSort, posts])
+    }, [filter.sort, posts])
 
-    const sortedAndSearchedPosts = useMemo( () => {
-        return posts.filter(p => p.title.toLowerCase()
-            .includes(searchQuery.toLowerCase()));
-    }, [sortedPosts, searchQuery])
+    const sortedAndSearchedPosts = useMemo(() => {
+        return sortedPosts.filter(p => p.title.toLowerCase()
+            .includes(filter.query.toLowerCase()));
+    }, [sortedPosts, filter.query])
 
     const createPost = (newPost) => {
         setPosts([...posts, newPost]);
@@ -37,29 +35,11 @@ function App() {
         setPosts(posts.filter(p => p.id !== post.id));
     }
 
-    const sortPosts = (sort) => {
-        setSelectedSort(sort);
-    }
-
     return (
         <div className="App">
             <PostForm create={createPost}/>
             <hr style={{margin: '15px'}}/>
-            <div>
-                <Input
-                    value={searchQuery}
-                    onChange={e => setSearchQuery(e.target.value)}
-                    placeholder="Поиск"
-                />
-                <Select
-                    value={selectedSort}
-                    onChange={sortPosts}
-                    defaultValue="Сортировка по"
-                    options={[
-                        {value: 'title', name: 'По названию'},
-                        {value: 'body', name: 'По описанию'},
-                    ]}/>
-            </div>
+            <PostFilter filter={filter} setFilter={setFilter}/>
             {sortedAndSearchedPosts.length !== 0
                 ? <PostList remove={removePost} posts={sortedAndSearchedPosts} title={"Список постов"}/>
                 : <h1 style={{textAlign: 'center'}}>Посты не найдены</h1>
