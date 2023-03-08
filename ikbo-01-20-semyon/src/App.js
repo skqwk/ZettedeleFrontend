@@ -1,12 +1,10 @@
 import React from 'react';
-import Counter from './components/Counter';
-
+import '../src/styles/App.css';
+import PostItem from "./components/PostItem";
 function App() {
   return (
     <div className="App">
-      <Counter/>
-      <Counter/>
-      <Counter/>
+        <PostItem post={{id: 1, title: 'Java Script', body: 'Description'}}/>
     </div>
   );
 }
