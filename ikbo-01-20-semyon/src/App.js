@@ -24,6 +24,11 @@ function App() {
             : posts;
     }, [selectedSort, posts])
 
+    const sortedAndSearchedPosts = useMemo( () => {
+        return posts.filter(p => p.title.toLowerCase()
+            .includes(searchQuery.toLowerCase()));
+    }, [sortedPosts, searchQuery])
+
     const createPost = (newPost) => {
         setPosts([...posts, newPost]);
     }
@@ -55,8 +60,8 @@ function App() {
                         {value: 'body', name: 'По описанию'},
                     ]}/>
             </div>
-            {posts.length !== 0
-                ? <PostList remove={removePost} posts={sortedPosts} title={"Список постов"}/>
+            {sortedAndSearchedPosts.length !== 0
+                ? <PostList remove={removePost} posts={sortedAndSearchedPosts} title={"Список постов"}/>
                 : <h1 style={{textAlign: 'center'}}>Посты не найдены</h1>
             }
         </div>
