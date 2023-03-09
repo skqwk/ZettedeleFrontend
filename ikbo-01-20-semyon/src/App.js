@@ -8,6 +8,7 @@ import Button from "./components/UI/button/Button";
 import {usePosts} from "./hooks/usePost";
 import PostService from "./API/PostService";
 import Loader from "./components/UI/loader/Loader";
+import {useFetching} from "./hooks/useFetching";
 
 function App() {
 
@@ -15,7 +16,10 @@ function App() {
     const [filter, setFilter] = useState({sort: '', query: ''})
     const [modal, setModal] = useState(false);
     const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
-    const [isPostsLoading, setIsPostsLoading] = useState(false);
+    const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
+        const posts = await PostService.getAll();
+        setPosts(posts);
+    })
 
     useEffect(() => {
         fetchPosts();
@@ -24,15 +28,6 @@ function App() {
     const createPost = (newPost) => {
         setPosts([...posts, newPost]);
         setModal(false);
-    }
-
-    async function fetchPosts() {
-        setIsPostsLoading(true);
-        setTimeout(async () => {
-            const posts = await PostService.getAll();
-            setPosts(posts);
-            setIsPostsLoading(false);
-        }, 1000)
     }
 
     const removePost = (post) => {
@@ -49,6 +44,10 @@ function App() {
             </Modal>
             <hr style={{margin: '15px'}}/>
             <PostFilter filter={filter} setFilter={setFilter}/>
+            {postError &&
+                <h1 style={{textAlign: 'center'}}> Произошла ошибка {postError}</h1>
+            }
+
             {isPostsLoading
                 ? <div style={{display: 'flex', justifyContent: 'center', marginTop: '50px'}}><Loader/></div>
                 : <PostList remove={removePost} posts={sortedAndSearchedPosts} title={"Список постов"}/>
