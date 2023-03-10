@@ -7,6 +7,7 @@ const Navbar = () => {
     const {isAuth, setIsAuth} = useContext(AuthContext);
 
     const logout = (e) => {
+        localStorage.removeItem('auth');
         e.preventDefault();
         setIsAuth(false);
     }

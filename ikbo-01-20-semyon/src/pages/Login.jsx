@@ -6,6 +6,7 @@ import {AuthContext} from "../context";
 const Login = () => {
     const {isAuth, setIsAuth} = useContext(AuthContext);
     const login = (e) => {
+        localStorage.setItem('auth', true);
         e.preventDefault()
         setIsAuth(true);
     }
