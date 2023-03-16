@@ -1,0 +1,21 @@
+.input-container {
+    width: 60%;
+}
+
+.input-container p {
+    font-size: 14px;
+    color: lightgrey;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+.in {
+    width: 100%;
+    margin-bottom: 30px;
+    border-radius: 20px;
+    height: 50px;
+    font-size: 22px;
+    text-indent: 8px;
+    outline: none;
+    border: 1px solid #d4d4d4;
+}

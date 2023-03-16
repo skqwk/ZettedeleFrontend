@@ -11,6 +11,7 @@
 h1 {
   font-size: 64px;
   font-weight: bold;
+  text-align: center;
 }
 
 p {
@@ -80,4 +81,13 @@ p {
   border-radius: 100%;
   background: #8894FF;
   filter: blur(12px);
+}
+
+.profile {
+  margin-top: 50px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
