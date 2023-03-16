@@ -1,16 +1,23 @@
 import './App.css';
-import React from 'react';
+import React, {useEffect} from 'react';
+import Navbar from "./Navbar";
 
 const App = () => {
+    useEffect(() => {
+        const script = document.createElement("script");
+        script.src = "./mouseTracker.js"
+        document.body.appendChild(script)
+        return () => {
+            // clean up the script when the component in unmounted
+            document.body.removeChild(script)
+        }
+    }, [])
+
     return (
         <div className="App">
             <div className="about-container">
                 <h1>Zettedele</h1>
-                <ul className="navbar">
-                    <li className="navbar-item">Профиль</li>
-                    <li className="navbar-item">Хранилища</li>
-                    <li className="navbar-item">Поиск</li>
-                </ul>
+                <Navbar/>
                 <div className="frozen-container">
                     <div className="content">
                         <p className="text__center">Zettedele - это система ведения заметок и управления личными
@@ -18,6 +25,7 @@ const App = () => {
                             построенная на основе метода
                             Zettelkasten
                         </p>
+                        <br/>
                         <p className="text__center">
                             Важные мысли не потеряются: каждую заметку можно связать ссылкой с другой заметкой,
                             использование
@@ -27,12 +35,6 @@ const App = () => {
                     </div>
                     <div className="circle-blue"></div>
                     <div className="circle-pink"></div>
-                </div>
-
-                <div className="box">
-                    <div className="box-content">
-
-                    </div>
                 </div>
 
             </div>
