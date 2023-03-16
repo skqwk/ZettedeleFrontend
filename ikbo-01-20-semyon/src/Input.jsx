@@ -4,7 +4,7 @@ const Input = ({placeholder, ...props}) => {
     console.log(props);
     return (
         <div className="input-container">
-            <p>{placeholder}</p>
+            {placeholder && <p>{placeholder}</p>}
             <input {...props} className="in"/>
         </div>
     );
