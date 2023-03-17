@@ -1,11 +1,10 @@
 import React from 'react';
-import './Select.css';
+import classes from './Select.module.css';
 
 const Select = ({options, defaultValue, value, onChange}) => {
     return (
-        <div className="select-container">
+        <div className={classes.selectContainer}>
             <select
-                className="select"
                 value={value}
                 onChange={event => onChange(event.target.value)}
             >

@@ -1,5 +1,5 @@
 import React from 'react';
-import Input from "./Input";
+import Input from "./UI/input/Input";
 
 const SearchBar = ({query, setQuery}) => {
 

@@ -1,6 +1,6 @@
 import React from 'react';
-import Input from "./Input";
-import Avatar from "./Avatar";
+import Input from "../components/UI/input/Input";
+import Avatar from "../components/UI/avatar/Avatar";
 
 const Profile = () => {
     const profile = {

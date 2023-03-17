@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import SearchBar from "./SearchBar";
-import RoundButton from "./RoundButton";
-import Select from "./Select";
+import SearchBar from "../components/SearchBar";
+import RoundButton from "../components/UI/roundbutton/RoundButton";
+import Select from "../components/UI/select/Select";
 
 const Search = () => {
 

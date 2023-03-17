@@ -1,8 +1,8 @@
-import './App.css';
+import './styles/App.css';
 import React from 'react';
 import {BrowserRouter, Link} from "react-router-dom";
-import AppRouter from "./AppRouter";
-import Navbar from "./Navbar";
+import AppRouter from "./components/AppRouter";
+import Navbar from "./components/Navbar";
 
 const App = () => {
     return (

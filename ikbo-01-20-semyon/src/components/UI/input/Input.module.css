@@ -1,8 +1,8 @@
-.input-container {
+.inputContainer {
     width: 60%;
 }
 
-.input-container p {
+.inputContainer p {
     font-size: 14px;
     color: lightgrey;
     letter-spacing: 1px;

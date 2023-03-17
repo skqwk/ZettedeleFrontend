@@ -1,9 +1,9 @@
 import React from 'react';
-import './Avatar.css'
+import classes from './Avatar.module.css'
 
 const Avatar = () => {
     return (
-        <div className="avatar">
+        <div className={classes.avatar}>
 
         </div>
     );

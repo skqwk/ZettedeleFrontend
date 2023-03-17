@@ -1,8 +1,8 @@
 import React from 'react';
-import './RoundButton.css';
+import classes from './RoundButton.module.css';
 const RoundButton = ({children, ...props}) => {
     return (
-        <button className="round-button" {...props}>
+        <button className={classes.roundButton} {...props}>
             {children}
         </button>
     );

@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import SearchBar from "./SearchBar";
-import NoteList from "./NoteList";
-import Select from "./Select";
-import RoundButton from "./RoundButton";
+import SearchBar from "../components/SearchBar";
+import NoteList from "../components/NoteList";
+import Select from "../components/UI/select/Select";
+import RoundButton from "../components/UI/roundbutton/RoundButton";
 
 const Vaults = () => {
     const [nowVault, setNowVault] = useState('');
