@@ -69,7 +69,7 @@ const Vaults = () => {
         <div>
             <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '30px'}}>
                 <SearchBar query={query} setQuery={setQuery}/>
-                <RoundButton onClick={createNewNote}><span role="img" aria-label="pen"></span></RoundButton>
+                <RoundButton onClick={createNewNote}><span role="img" aria-label="pen">✎</span></RoundButton>
                 <Select
                     defaultValue="Выбор хранилища"
                     value={nowVault}

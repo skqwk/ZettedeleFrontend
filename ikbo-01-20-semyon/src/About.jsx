@@ -4,11 +4,13 @@ import './App.css';
 const About = () => {
     useEffect(() => {
         const script = document.createElement("script");
-        script.src = "./mouseTracker.js"
-        document.body.appendChild(script)
+        script.src = "./mouseTracker.js";
+        console.log('Add script');
+        document.body.appendChild(script);
         return () => {
             // clean up the script when the component in unmounted
-            document.body.removeChild(script)
+            document.body.removeChild(script);
+            console.log('Remove script');
         }
     }, [])
 
@@ -33,7 +35,6 @@ const About = () => {
                 <div className="circle-blue"></div>
                 <div className="circle-pink"></div>
             </div>
-
         </div>);
 };
 
