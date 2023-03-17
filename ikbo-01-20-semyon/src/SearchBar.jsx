@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Input from "./Input";
 
-const SearchBar = () => {
-    const [search, setSearch] = useState("");
-    console.log(search);
+const SearchBar = ({query, setQuery}) => {
 
     return (
-        <Input value={search} onChange={(e) => {setSearch(e.target.value)}
+        <Input value={query} onChange={(e) => {
+            setQuery(e.target.value)
+        }
         }/>
     );
 };

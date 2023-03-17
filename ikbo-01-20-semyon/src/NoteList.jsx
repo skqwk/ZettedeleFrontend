@@ -1,9 +1,16 @@
 import React from 'react';
+import NoteCard from "./NoteCard";
 
-const NoteList = () => {
+const NoteList = ({notes}) => {
+    const remove = () => {
+        console.log("Call remove note")
+    }
+
     return (
-        <div>
-            СПИСОК ЗАМЕТОК
+        <div className="note-list">
+            {notes.map((note) =>
+                    <NoteCard remove={remove} key={note.id} note={note}/>
+            )}
         </div>
     );
 };

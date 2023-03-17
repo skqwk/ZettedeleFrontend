@@ -1,7 +1,6 @@
 import React from 'react';
 import './Input.css';
 const Input = ({placeholder, ...props}) => {
-    console.log(props);
     return (
         <div className="input-container">
             {placeholder && <p>{placeholder}</p>}
