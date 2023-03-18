@@ -98,7 +98,7 @@ p {
   grid-gap: 25px;
 }
 
-.note-card {
+.noteCard {
   position: relative;
   font-size: 14px;
   cursor: pointer;
@@ -112,19 +112,25 @@ p {
   border-radius: 20px;
 }
 
-.note-card:hover {
+.noteCard:hover {
   transform: scale(1.01);
   box-shadow: 0 -1px 5px 0 #a3a3a3;
   transition: 0.2s;
 }
 
-.note-card p {
+.noteCard p {
   font-size: 14px;
 }
 
-.note-date {
+.noteCardControl {
+  width: 80%;
   position: absolute;
   bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.noteDate {
   font-size: 14px;
   font-weight: 600;
   opacity: 0.6;

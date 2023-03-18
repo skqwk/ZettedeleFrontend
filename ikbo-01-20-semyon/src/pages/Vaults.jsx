@@ -34,16 +34,30 @@ const Vaults = () => {
         setVisible(true);
     }
 
-    const createNewNote = (note) => {
-        console.log("New note", note);
-        let updatedNotes = [...notes, note];
+    const saveNote = (note) => {
+        let updatedNotes = notes;
+        let noteIndex = updatedNotes.findIndex(n => n.id === note.id);
+        if (noteIndex > -1) {
+            updatedNotes[noteIndex] = note;
+        } else {
+            console.log("New note", note);
+            updatedNotes = [...notes, note];
+        }
         setNotes(updatedNotes);
         vaults[nowVault].notes = updatedNotes;
     }
 
+    const removeNote = (id) => {
+        let filteredNotes = notes.filter(note => note.id !== id);
+        setNotes(filteredNotes);
+    }
+
     return (<div>
         <Modal visible={visible} setVisible={setVisible}>
-            <NoteForm create={createNewNote} visible={visible} setVisible={setVisible}/>
+            <NoteForm save={saveNote}
+                      visible={visible}
+                      setVisible={setVisible}
+                      note={{content: '', title: ''}}/>
         </Modal>
         <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '30px'}}>
             <SearchBar query={query} setQuery={setQuery}/>
@@ -56,7 +70,9 @@ const Vaults = () => {
                 options={onlyVaults}/>
             <RoundButton onClick={createNewVault}>+</RoundButton>
         </div>
-        <NoteList notes={searchedNotes}/>
+        <NoteList notes={searchedNotes}
+                  remove={removeNote}
+                  save={saveNote}/>
     </div>);
 };
 

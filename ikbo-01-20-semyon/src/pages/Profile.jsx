@@ -13,10 +13,12 @@ const Profile = () => {
     return (
         <div className="profile">
             <Avatar/>
-            <Input placeholder="ЛОГИН" readOnly value={profile.login}/>
-            <Input placeholder="ИМЯ" readOnly value={profile.name}/>
-            <Input placeholder="ФАМИЛИЯ" readOnly value={profile.surname}/>
-            <Input placeholder="ОТЧЕСТВО" readOnly value={profile.lastname}/>
+            <div style={{width: "60%"}}>
+                <Input inputName="ЛОГИН" readOnly value={profile.login}/>
+                <Input inputName="ИМЯ" readOnly value={profile.name}/>
+                <Input inputName="ФАМИЛИЯ" readOnly value={profile.surname}/>
+                <Input inputName="ОТЧЕСТВО" readOnly value={profile.lastname}/>
+            </div>
         </div>
     );
 };

@@ -1,0 +1,9 @@
+.textArea {
+    width: 100%;
+    margin-bottom: 30px;
+    border-radius: 20px;
+    font-size: 18px;
+    text-indent: 15px;
+    outline: none;
+    border: 1px solid #d4d4d4;
+}

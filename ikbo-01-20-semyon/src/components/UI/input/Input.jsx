@@ -1,10 +1,10 @@
 import React from 'react';
 import classes from './Input.module.css';
 
-const Input = ({placeholder, ...props}) => {
+const Input = ({inputName, ...props}) => {
     return (
         <div className={classes.inputContainer}>
-            {placeholder && <p>{placeholder}</p>}
+            {inputName && <p>{inputName}</p>}
             <input {...props} className={classes.in}/>
         </div>
     );
