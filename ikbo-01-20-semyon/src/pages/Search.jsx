@@ -51,7 +51,7 @@ const Search = () => {
             {items.length === 0
                 ? "Ничего не найдено"
                 : items.map(item =>
-                    <div className="item">
+                    <div className="item" key={item.id}>
                         <div className="itemAvatar"/>
                         <div className="itemContent">
                             <h4>{item.name}</h4>

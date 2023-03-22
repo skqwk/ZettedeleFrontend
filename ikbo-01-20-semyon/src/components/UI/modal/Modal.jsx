@@ -1,7 +1,7 @@
 import React from 'react';
 import classes from './Modal.module.css';
 
-const Modal = ({children, visible, setVisible}) => {
+const Modal = ({children, visible, setVisible, contentBackground}) => {
     const rootClasses = [classes.modal];
     if (visible) {
         rootClasses.push(classes.active)
@@ -9,7 +9,8 @@ const Modal = ({children, visible, setVisible}) => {
 
     return (
         <div className={rootClasses.join(' ')} onClick={() => setVisible(false)}>
-            <div className={classes.modalContent} onClick={e => e.stopPropagation()}>
+            <div className={classes.modalContent} style={{background: contentBackground}}
+                 onClick={e => e.stopPropagation()}>
                 {children}
             </div>
         </div>
