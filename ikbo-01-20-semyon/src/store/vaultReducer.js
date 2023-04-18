@@ -1,11 +1,27 @@
 import {v4} from 'uuid';
+import {NoteManager} from "../core/NoteManager";
+
+// Инициализируем стартовое состояние из NoteManager
+// NoteManager.initState()
 
 const defaultState = {
     vaults: [
         {
-            id: '1234', name: 'Работа', notes: [
+            id: 'work', name: 'work', notes: [
                 {
-                    id: '1234', name: 'Новая заметка', head: '9101', paragraphs: {
+                    id: 'note1', name: 'Новая заметка', head: '9101', paragraphs: {
+                        '1234': {id: '1234', content: '123', next: null},
+                        '5678': {id: '5678', content: '567', next: '1234'},
+                        '9101': {id: '9101', content: '890', next: '5678'},
+                    }
+                }
+
+            ],
+        },
+        {
+            id: 'study', name: 'study', notes: [
+                {
+                    id: 'note1', name: 'Новая заметка', head: '9101', paragraphs: {
                         '1234': {id: '1234', content: '123', next: null},
                         '5678': {id: '5678', content: '567', next: '1234'},
                         '9101': {id: '9101', content: '890', next: '5678'},
@@ -25,6 +41,8 @@ const REMOVE_NOTE = 'REMOVE_NOTE';
 const CREATE_PARAGRAPH = 'CREATE_PARAGRAPH';
 const REMOVE_PARAGRAPH = 'REMOVE_PARAGRAPH';
 const UPDATE_PARAGRAPH = 'UPDATE_PARAGRAPH';
+const LOAD_NOTES = 'LOAD_NOTES';
+
 
 export const createVaultEvent = () => ({type: CREATE_VAULT})
 export const saveNoteEvent = () => ({type: SAVE_NOTE})
@@ -33,6 +51,8 @@ export const removeNoteEvent = (payload) => ({type: REMOVE_NOTE, payload})
 export const createParagraphEvent = (payload) => ({type: CREATE_PARAGRAPH, payload})
 export const removeParagraphEvent = (payload) => ({type: REMOVE_PARAGRAPH, payload})
 export const updateParagraphEvent = (payload) => ({type: UPDATE_PARAGRAPH, payload})
+
+export const loadNotesEvent = (payload) => ({type: LOAD_NOTES, payload});
 
 export const vaultReducer = (state = defaultState, action) => {
     switch (action.type) {
@@ -48,6 +68,8 @@ export const vaultReducer = (state = defaultState, action) => {
             return removeParagraphUseCase(state, action.payload);
         case UPDATE_PARAGRAPH:
             return updateParagraphUseCase(state, action.payload);
+        case LOAD_NOTES:
+            return loadNotesUseCase(state, action.payload);
         default:
             return state;
     }
@@ -64,6 +86,12 @@ const createVaultUseCase = (state) => {
 const createNoteUseCase = (state) => {
     console.log("Create note");
     return state;
+}
+
+const loadNotesUseCase = (state, payload) => {
+    let vaults = NoteManager.loadNotesInMemory(payload.username);
+
+    return {...state, vaults: vaults};
 }
 
 const createParagraphUseCase = (state, payload) => {
@@ -130,6 +158,12 @@ const updateParagraphUseCase = (state, payload) => {
     console.log(paragraph);
     console.log(payload);
     console.log(newVaults);
+    NoteManager.updateNote({
+        ...payload,
+        event: UPDATE_PARAGRAPH,
+        body: {content: paragraph.content, id: paragraph.id},
+    })
+
     return {vaults: newVaults};
 }
 

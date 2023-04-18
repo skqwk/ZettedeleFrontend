@@ -1,12 +1,13 @@
 import React, {useEffect, useRef, useState} from 'react';
 import classes from "./Paragraph.module.css";
 import useAutosizeTextArea from "../hooks/useAutosizeTextArea";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {createParagraphEvent, removeParagraphEvent, updateParagraphEvent} from "../store/vaultReducer";
 import useAutosizeTextAreaInit from "../hooks/useAutosizeTextAreaInit";
 
 const Paragraph = ({paragraph, address, ...props}) => {
     const dispatch = useDispatch();
+    const nowUser = useSelector(state => state.user.name);
 
     const textAreaRef = useRef(null);
 
@@ -19,7 +20,7 @@ const Paragraph = ({paragraph, address, ...props}) => {
         if (text.length === 0) {
             dispatch(removeParagraphEvent({...address, id: paragraph.id}));
         }
-        dispatch(updateParagraphEvent({...address, id: paragraph.id, content: text}))
+        dispatch(updateParagraphEvent({...address, id: paragraph.id, content: text, nowUser}))
     }
 
     return (

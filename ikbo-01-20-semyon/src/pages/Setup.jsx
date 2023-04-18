@@ -3,10 +3,14 @@ import Input from "../components/UI/input/Input";
 import Switch from "../components/UI/switch/Switch";
 import {useDispatch, useSelector} from "react-redux";
 import {offlineAction, onlineAction} from "../store/connectionReducer";
+import {loadNotesEvent} from "../store/vaultReducer";
+import RoundButton from "../components/UI/roundbutton/RoundButton";
+import {NoteManager} from "../core/NoteManager";
 
 const Setup = () => {
     const dispatch = useDispatch();
     const offline = useSelector(state => state.connection.offline);
+    const nowUser = useSelector(state => state.user.name);
 
     const setup = {
         domain: 'RU',
@@ -28,6 +32,7 @@ const Setup = () => {
                 <Switch switchName="ИНТЕРНЕТ" onToggle={toggle} checked={!offline}/>
                 <Input inputName="ДОМЕН" readOnly value={setup.domain}/>
                 <Input inputName="СЕРВЕР" readOnly value={setup.server}/>
+                <RoundButton onClick={e => dispatch(loadNotesEvent({username: nowUser}))}>⟳</RoundButton>
             </div>
         </div>
     );

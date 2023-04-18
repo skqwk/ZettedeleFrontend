@@ -10,8 +10,9 @@ import NoteFormV2 from "../components/NoteFormV2";
 import {createVaultEvent} from "../store/vaultReducer";
 
 const Notes = () => {
-    const [nowVault, setNowVault] = useState('1234');
-    const [nowNote, setNowNote] = useState('1234');
+    const [nowVault, setNowVault] = useState('study');
+    const [nowNote, setNowNote] = useState('note1');
+    const nowUser = useSelector(state => state.user.name);
     const getNoteByVaultIdAndNoteId = (vaults, vaultId, noteId) => {
         console.log(vaults);
 
