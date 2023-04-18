@@ -4,8 +4,10 @@ import RoundButton from "../components/UI/roundbutton/RoundButton";
 import Select from "../components/UI/select/Select";
 import SearchService from "../API/SearchService";
 import '../styles/App.css';
+import {useSelector} from "react-redux";
 
 const Search = () => {
+    const offline = useSelector(state => state.connection.offline);
 
     const [query, setQuery] = useState('');
     const [selectedValue, setSelectedValue] = useState('users');
@@ -16,6 +18,10 @@ const Search = () => {
         {name: 'Хранилища', value: 'vaults'},
         {name: 'Заметки', value: 'notes'},
     ]
+
+    useEffect(() => {
+        console.log(`Current mode is ${offline ? 'offline' : 'online'}`)
+    }, [])
 
     const search = (e) => {
         console.log("Search!")
@@ -46,19 +52,22 @@ const Search = () => {
             <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '30px'}}>
                 <SearchBar query={query} setQuery={setQuery}/>
                 <Select value={selectedValue} onChange={setSelectedValue} options={options} defaultValue="Что искать?"/>
-                <RoundButton onClick={e => search(e)}><span role="img" aria-label="loupe">🔍</span>︎</RoundButton>
+                <RoundButton onClick={e => search(e)} disabled={offline}><span role="img"
+                                                                               aria-label="loupe">🔍</span>︎</RoundButton>
             </div>
-            {items.length === 0
-                ? "Ничего не найдено"
-                : items.map(item =>
-                    <div className="item" key={item.id}>
-                        <div className="itemAvatar"/>
-                        <div className="itemContent">
-                            <h4>{item.name}</h4>
-                            <p>{item.username}</p>
+            {offline
+                ? 'Отсутствует подключение к сети'
+                : items.length === 0
+                    ? "Ничего не найдено"
+                    : items.map(item =>
+                        <div className="item" key={item.id}>
+                            <div className="itemAvatar"/>
+                            <div className="itemContent">
+                                <h4>{item.name}</h4>
+                                <p>{item.username}</p>
+                            </div>
                         </div>
-                    </div>
-                )
+                    )
             }
 
         </div>

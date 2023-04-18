@@ -1,0 +1,39 @@
+.paragraph {
+    width: 100%;
+    padding: 0;
+    margin-bottom: 0;
+    font-size: 18px;
+    outline: none;
+    border: none;
+    resize: none;
+    cursor: text;
+    height: 0;
+}
+
+.dividerContainer {
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.1;
+}
+
+.dividerContainer:hover {
+    opacity: 0.9;
+    transition: 0.2s;
+}
+
+.divider {
+ height: 3px;
+ background-color: #d4d4d4;
+ width: 100%;
+}
+
+.add {
+    min-width: 25px;
+    height: 25px;
+    border-radius: 25px;
+    background-color: #d4d4d4;
+    text-align: center;
+    cursor: pointer;
+}

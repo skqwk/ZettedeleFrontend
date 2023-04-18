@@ -1,3 +1,6 @@
+import {v4} from 'uuid';
+
+
 export const vaults = {
     vault1: {
         value: 'vault1',
@@ -26,3 +29,49 @@ export const vaults = {
         ]
     }
 };
+
+
+export const newVaults = {
+    vault1: {
+        name: 'Учеба',
+        id: 'vault1',
+        notes: [
+            {
+                id: v4(),
+                createdAt: new Date(),
+                editedAt: new Date(),
+                title: 'Архитектура по EDA',
+                head: 1,
+                paragraphs: {
+                    1: {
+                        id: v4(),
+                        createdAt: new Date(),
+                        editedAt: new Date(),
+                        content: '1. Определить основные события, которые должны происходить в приложении, такие как создание, изменение или удаление заметок.',
+                        insertKey: v4(),
+                        deleteKey: v4(),
+                        link: 2
+                    },
+                    2: {
+                        id: v4(),
+                        createdAt: new Date(),
+                        editedAt: new Date(),
+                        content: '2. Разработать модель событий, которая описывает состояние системы и как она реагирует на события.',
+                        insertKey: v4(),
+                        deleteKey: v4(),
+                        link: 2
+                    },
+                    3: {
+                        id: v4(),
+                        createdAt: new Date(),
+                        editedAt: new Date(),
+                        content: '3. Разделить приложение на слои, такие как слой приложения, слой бизнес-логики и слой инфраструктуры.',
+                        insertKey: v4(),
+                        deleteKey: v4(),
+                        link: null
+                    }
+                }
+            }
+        ]
+    }
+}

@@ -46,7 +46,6 @@ const Vaults = () => {
             updatedNotes = [...notes, note];
         }
         setNotes(updatedNotes);
-        //vaults[nowVault].notes = updatedNotes;
     }
 
     useEffect(() => {
