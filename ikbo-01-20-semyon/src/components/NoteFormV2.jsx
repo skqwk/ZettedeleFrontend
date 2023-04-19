@@ -4,16 +4,18 @@ import RoundButton from "./UI/roundbutton/RoundButton";
 import TextArea from "./UI/textarea/TextArea";
 import ColorBox from "./UI/colorbox/ColorBox";
 import {useDispatch, useSelector} from "react-redux";
-import {removeNoteEvent} from "../store/vaultReducer";
+import {createParagraphEvent, removeNoteEvent} from "../store/vaultReducer";
 import Paragraph from "./Paragraph";
+import classes from "./Paragraph.module.css";
+import Divider from "./UI/divider/Divider";
+import noteForm from "./NoteForm";
 
 const NoteFormV2 = ({save, visible, setVisible, address}) => {
     const dispatch = useDispatch();
     const offline = useSelector(state => state.connection.offline);
+    const nowUser = useSelector(state => state.user.name);
 
     const getNoteByVaultIdAndNoteId = (vaults, vaultId, noteId) => {
-        console.log(vaults);
-
         let note = vaults
             .find(v => v.id === vaultId)
             .notes
@@ -25,8 +27,8 @@ const NoteFormV2 = ({save, visible, setVisible, address}) => {
     const formNote = useSelector(state => getNoteByVaultIdAndNoteId(state.vault.vaults, address.vaultId, address.noteId));
 
     useEffect(() => {
-        console.log('Form note is changed!');
-        console.log(formNote);
+        // console.log('Form note is changed!');
+        // console.log(formNote);
     }, [formNote])
 
     //const formNote = useSelector(state => getNoteByVaultIdAndNoteId(state.vault.vaults, address.vaultId, address.noteId))
@@ -96,6 +98,7 @@ const NoteFormV2 = ({save, visible, setVisible, address}) => {
 
     return (
         <div style={{
+            width: '600px',
             display: 'flex',
             flexDirection: 'column',
             backgroundColor: defineColor(formNote),
@@ -104,7 +107,7 @@ const NoteFormV2 = ({save, visible, setVisible, address}) => {
             <Input placeholder="Заголовок"
                    // onChange={e => setFormNote({...formNote, title: e.target.value})}
                    value={formNote.name}/>
-
+            <Divider address={address} prev={null} next={formNote.head}/>
             {paragraphs.map(paragraph =>
                 <Paragraph
                     paragraph={paragraph}

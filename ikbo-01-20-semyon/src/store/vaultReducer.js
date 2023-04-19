@@ -1,5 +1,5 @@
-import {v4} from 'uuid';
 import {NoteManager} from "../core/NoteManager";
+import {HLC} from "../core/HLC";
 
 // Инициализируем стартовое состояние из NoteManager
 // NoteManager.initState()
@@ -21,10 +21,31 @@ const defaultState = {
         {
             id: 'study', name: 'study', notes: [
                 {
-                    id: 'note1', name: 'Новая заметка', head: '9101', paragraphs: {
-                        '1234': {id: '1234', content: '123', next: null},
-                        '5678': {id: '5678', content: '567', next: '1234'},
-                        '9101': {id: '9101', content: '890', next: '5678'},
+                    id: 'note1', name: 'Event Driven Architecture', head: '2023-04-19T04:25:42.558Z', paragraphs: {
+                        '2023-04-19T04:25:42.558Z':
+                            {
+                                id: '2023-04-19T04:25:42.558Z',
+                                content: 'Для проектирования архитектуры приложения для заметок по EDA (Event-Driven Architecture) следует учитывать следующие принципы:',
+                                next: '2023-04-19T04:26:42.558Z'
+                            },
+                        '2023-04-19T04:26:42.558Z':
+                            {
+                                id: '2023-04-19T04:26:42.558Z',
+                                content: '1. Определить основные события, которые должны происходить в приложении, такие как создание, изменение или удаление заметок.',
+                                next: '2023-04-19T04:27:42.558Z'
+                            },
+                        '2023-04-19T04:27:42.558Z':
+                            {
+                                id: '2023-04-19T04:27:42.558Z',
+                                content: '2. Разработать модель событий, которая описывает состояние системы и как она реагирует на события.',
+                                next: '2023-04-19T04:28:42.558Z'
+                            },
+                        '2023-04-19T04:28:42.558Z':
+                            {
+                                id: '2023-04-19T04:28:42.558Z',
+                                content: '3. Разделить приложение на слои, такие как слой приложения, слой бизнес-логики и слой инфраструктуры.',
+                                next: null
+                            },
                     }
                 }
 
@@ -95,21 +116,35 @@ const loadNotesUseCase = (state, payload) => {
 }
 
 const createParagraphUseCase = (state, payload) => {
-    console.log("Create paragraph");
+    console.log("CreateParagraphUseCase");
 
-    let newVault = getVault(state.vaults, payload);
-    let prevParagraph = getParagraph(state.vaults, payload);
+    let newParagraph = {id: HLC.timestamp(), content: '', prev: payload.prev, next: payload.next};
     let newNote = getNote(state.vaults, payload);
-
-    let newParagraph = {id: v4(), content: '', next: payload.next}
-    prevParagraph.next = newParagraph.id;
-
-    newNote.paragraphs[prevParagraph.id] = prevParagraph;
+    console.log(newParagraph);
+    if (newParagraph.prev === null) {
+        newNote.head = newParagraph.id;
+    } else {
+        let prevParagraph = getParagraph(state.vaults, payload, newParagraph.prev);
+        prevParagraph.next = newParagraph.id;
+        newNote.paragraphs[prevParagraph.id] = prevParagraph;
+    }
     newNote.paragraphs[newParagraph.id] = newParagraph;
 
+    let newVault = getVault(state.vaults, payload);
     newVault.notes = [...newVault.notes.filter(n => n.id !== payload.noteId), newNote];
 
     let newVaults = [...state.vaults.filter(v => v.id !== payload.vaultId), newVault]
+
+    NoteManager.updateNote({
+        ...payload,
+        event: CREATE_PARAGRAPH,
+        body: {
+            content: newParagraph.content,
+            id: newParagraph.id,
+            prev: newParagraph.prev,
+            next: newParagraph.next
+        },
+    })
 
     console.log(payload);
     console.log(newVaults);
@@ -118,7 +153,7 @@ const createParagraphUseCase = (state, payload) => {
 
 const removeParagraphUseCase = (state, payload) => {
     console.log("Remove paragraph");
-    let paragraph = getParagraph(state.vaults, payload);
+    let paragraph = getParagraph(state.vaults, payload, payload.id);
     let newNote = getNote(state.vaults, payload);
 
     if (newNote.head === payload.id) {
@@ -144,7 +179,7 @@ const removeParagraphUseCase = (state, payload) => {
 
 const updateParagraphUseCase = (state, payload) => {
     console.log("Update paragraph");
-    let paragraph = getParagraph(state.vaults, payload);
+    let paragraph = getParagraph(state.vaults, payload, payload.id);
     paragraph.content = payload.content;
 
     let newNote = getNote(state.vaults, payload);
@@ -180,7 +215,7 @@ const findPrevParagraph = (head, paragraphs, id) => {
 
 const getVault = (vaults, address) => ({...vaults.find(v => v.id === address.vaultId)});
 const getNote = (vaults, address) => ({...getVault(vaults, address).notes.find(n => n.id === address.noteId)});
-const getParagraph = (vaults, address) => ({...getNote(vaults, address).paragraphs[address.id]});
+const getParagraph = (vaults, address, paragraphId) => ({...getNote(vaults, address).paragraphs[paragraphId]});
 
 const removeNoteUseCase = (state, payload) => {
     console.log(`Remove note with id = ${payload.noteId} from vault with id = ${payload.vaultId}`);

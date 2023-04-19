@@ -4,6 +4,7 @@ import useAutosizeTextArea from "../hooks/useAutosizeTextArea";
 import {useDispatch, useSelector} from "react-redux";
 import {createParagraphEvent, removeParagraphEvent, updateParagraphEvent} from "../store/vaultReducer";
 import useAutosizeTextAreaInit from "../hooks/useAutosizeTextAreaInit";
+import Divider from "./UI/divider/Divider";
 
 const Paragraph = ({paragraph, address, ...props}) => {
     const dispatch = useDispatch();
@@ -32,14 +33,7 @@ const Paragraph = ({paragraph, address, ...props}) => {
                 className={classes.paragraph} {...props}>
 
             </textarea>
-            <div className={classes.dividerContainer}>
-                <div className={classes.divider}/>
-                <div className={classes.add}
-                     onClick={e => dispatch(createParagraphEvent({...address, id: paragraph.id, next: paragraph.next}))}
-                >+</div>
-                <div className={classes.divider}/>
-            </div>
-
+            <Divider address={address} prev={paragraph.id} next={paragraph.next}/>
         </div>
     );
 };

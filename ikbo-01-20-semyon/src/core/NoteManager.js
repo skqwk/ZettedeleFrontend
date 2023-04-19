@@ -27,10 +27,28 @@ export class NoteManager {
         let vaultPath = join(dataPath, nowUser, payload.vaultId);
         let notePath = join(vaultPath, payload.noteId);
 
-        let updateNoteMessage =
-            {event: payload.event, happenAt: HLC.timestamp(), payload: payload.body};
+        let eventPayload = this.createPayloadDependsOnEvent(payload.event, payload.body);
 
-        fs.appendFileSync(notePath,  this.toJson(updateNoteMessage));
+        // У нового параграфа по умолчанию идентификатор - значение timestamp, поэтому
+        // у него happenAt == id
+        let happenAt = payload.event === 'CREATE_PARAGRAPH'
+            ? payload.body.id
+            : HLC.timestamp();
+
+        fs.appendFileSync(notePath, this.toJson({
+            event: payload.event,
+            happenAt,
+            payload: eventPayload
+        }));
+    }
+
+    static createPayloadDependsOnEvent = (event, payload) => {
+        switch (event) {
+            case 'CREATE_PARAGRAPH':
+                return {insertKey: payload.prev, content: payload.content};
+            case 'UPDATE_PARAGRAPH':
+                return {updateKey: payload.id, content: payload.content};
+        }
     }
 
     static loadNotesInMemory(nowUser) {
@@ -70,7 +88,10 @@ export class NoteManager {
 
         let events = lines
             .filter(line => line)
-            .map(line => JSON.parse(line));
+            .map(line => {
+                console.log(line);
+                return JSON.parse(line);
+            });
 
 
         let sortedEvents = events
@@ -79,9 +100,10 @@ export class NoteManager {
         console.log(sortedEvents);
 
         let note = this.processEvents(sortedEvents);
-        console.log('AFTER PROCESS EVENTS');
-        console.log(note);
-        return note;
+
+        let domainNote = this.mapNoteToDomain(note);
+
+        return domainNote;
     }
 
 
@@ -94,27 +116,47 @@ export class NoteManager {
         return note;
     }
 
+    static mapNoteToDomain(note) {
+        note.paragraphs = Object.fromEntries(
+            Object.entries(note.paragraphs)
+                .map(paragraphEntry => [paragraphEntry[0], this.mapParagraphToDomain(paragraphEntry[1])]));
+        return note;
+    }
+
+    static mapParagraphToDomain = (paragraph) => {
+        return {
+            id: paragraph.insertKey,
+            content: paragraph.content,
+            next: paragraph.next
+        }
+    }
+
     static createParagraphOperation = (payload, note) => {
         console.log('createParagraphOperation');
+        console.log(note.paragraphs);
         let paragraph = {
             insertKey: payload.happenAt,
-            deleteKey: payload.happenAt
+            deleteKey: payload.happenAt,
+            content: payload.content,
+            next: null
         };
 
         let prevParagraph;
 
         if (payload.insertKey !== null) {
             prevParagraph = note.paragraphs[payload.insertKey];
+            console.log('Find prevParagraph:');
+            console.log(prevParagraph);
         }
 
         if (payload.insertKey === null) {
+            console.log('INSERT HEAD');
             console.log(note.head);
             if (note.head === null || note.head.localeCompare(paragraph.insertKey) < 0) {
                 if (note.head !== null) {
                     paragraph.next = note.head;
                 }
                 note.head = paragraph.insertKey;
-                paragraph.content = '';
                 note.paragraphs[paragraph.insertKey] = paragraph;
                 return;
             } else {
@@ -122,19 +164,21 @@ export class NoteManager {
             }
         }
 
-        while(prevParagraph.next !== null &&
-        paragraph.insertKey.compareTo(note.paragraphs[prevParagraph.next].insertKey < 0)) {
-            prevParagraph = prevParagraph.next;
+        while (prevParagraph.next !== null &&
+               paragraph.insertKey.localeCompare(note.paragraphs[prevParagraph.next].insertKey) < 0) {
+            prevParagraph = note.paragraphs[prevParagraph.next];
         }
 
         paragraph.next = prevParagraph.next;
         prevParagraph.next = paragraph.insertKey;
+        console.log('Update prevParagraph:')
+        console.log(prevParagraph);
         note.paragraphs[paragraph.insertKey] = paragraph;
     }
 
     static updateParagraphOperation = (payload, note) => {
         console.log('updateParagraphOperation');
-        let paragraph = note.paragraphs[payload.insertKey];
+        let paragraph = note.paragraphs[payload.updateKey];
         if (paragraph.content === null) {
             return;
         }
@@ -150,11 +194,10 @@ export class NoteManager {
     static createNoteOperation = (payload, note) => {
         console.log('createNoteOperation');
         note.name = payload.name;
-        note.id = payload.id;
+        note.id = payload.systemName;
         note.head = null;
+        console.log(note);
     }
-
-
 
     static eventMap = {
         'UPDATE_PARAGRAPH': this.updateParagraphOperation,
@@ -167,6 +210,6 @@ export class NoteManager {
     }
 
     static toJson(message) {
-        return `${JSON.stringify(message)}\n`
+        return `\n${JSON.stringify(message)}\r`
     }
 }
