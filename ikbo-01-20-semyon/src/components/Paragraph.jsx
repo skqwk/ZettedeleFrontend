@@ -1,14 +1,15 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import classes from "./Paragraph.module.css";
 import useAutosizeTextArea from "../hooks/useAutosizeTextArea";
-import {useDispatch, useSelector} from "react-redux";
-import {createParagraphEvent, removeParagraphEvent, updateParagraphEvent} from "../store/vaultReducer";
+import {useDispatch} from "react-redux";
+import {removeParagraphEvent, updateParagraphEvent} from "../store/vaultReducer";
 import useAutosizeTextAreaInit from "../hooks/useAutosizeTextAreaInit";
 import Divider from "./UI/divider/Divider";
+import {useProfile} from "../hooks/useProfile";
 
 const Paragraph = ({paragraph, address, ...props}) => {
     const dispatch = useDispatch();
-    const nowUser = useSelector(state => state.user.name);
+    const nowUser = useProfile();
 
     const textAreaRef = useRef(null);
 

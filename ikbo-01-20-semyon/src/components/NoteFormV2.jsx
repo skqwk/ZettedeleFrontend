@@ -1,30 +1,18 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import Input from "./UI/input/Input";
 import RoundButton from "./UI/roundbutton/RoundButton";
-import TextArea from "./UI/textarea/TextArea";
 import ColorBox from "./UI/colorbox/ColorBox";
 import {useDispatch, useSelector} from "react-redux";
-import {createParagraphEvent, removeNoteEvent} from "../store/vaultReducer";
 import Paragraph from "./Paragraph";
-import classes from "./Paragraph.module.css";
 import Divider from "./UI/divider/Divider";
-import noteForm from "./NoteForm";
+import {useProfile} from "../hooks/useProfile";
+import {useNote} from "../hooks/useNote";
 
 const NoteFormV2 = ({save, visible, setVisible, address}) => {
     const dispatch = useDispatch();
     const offline = useSelector(state => state.connection.offline);
-    const nowUser = useSelector(state => state.user.name);
-
-    const getNoteByVaultIdAndNoteId = (vaults, vaultId, noteId) => {
-        let note = vaults
-            .find(v => v.id === vaultId)
-            .notes
-            .find(n => n.id === noteId);
-
-        console.log(note);
-        return note;
-    }
-    const formNote = useSelector(state => getNoteByVaultIdAndNoteId(state.vault.vaults, address.vaultId, address.noteId));
+    const nowUser = useProfile();
+    const formNote = useNote(address.vaultId, address.noteId);
 
     useEffect(() => {
         // console.log('Form note is changed!');

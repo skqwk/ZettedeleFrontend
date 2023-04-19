@@ -6,11 +6,12 @@ import {offlineAction, onlineAction} from "../store/connectionReducer";
 import {loadNotesEvent} from "../store/vaultReducer";
 import RoundButton from "../components/UI/roundbutton/RoundButton";
 import {NoteManager} from "../core/NoteManager";
+import {useProfile} from "../hooks/useProfile";
 
 const Setup = () => {
     const dispatch = useDispatch();
     const offline = useSelector(state => state.connection.offline);
-    const nowUser = useSelector(state => state.user.name);
+    const nowUser = useProfile();
 
     const setup = {
         domain: 'RU',

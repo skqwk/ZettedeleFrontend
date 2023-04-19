@@ -1,11 +1,12 @@
 import React from 'react';
 import classes from "./Divider.module.css";
 import {createParagraphEvent} from "../../../store/vaultReducer";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
+import {useProfile} from "../../../hooks/useProfile";
 
 const Divider = ({address, prev, next}) => {
     const dispatch = useDispatch();
-    const nowUser = useSelector(state => state.user.name);
+    const nowUser = useProfile();
 
     return (
         <div className={classes.dividerContainer}>

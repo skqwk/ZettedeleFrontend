@@ -1,21 +1,31 @@
 const defaultState = {
-    name: "skqwk"
+    isAuth: false,
+    credentials: {}
 }
 
-const CHECKOUT = 'CHECKOUT';
+const LOGOUT = 'LOGOUT';
+const LOGIN = 'LOGIN';
 
-export const userReducer = (state = defaultState, action) => {
+export const authReducer = (state = defaultState, action) => {
     switch (action.type) {
-        case CHECKOUT:
-            return checkoutUserUseCase(state, action.payload);
+        case LOGOUT:
+            return logoutUseCase(state);
+        case LOGIN:
+            return loginUseCase(state);
         default:
             return state;
     }
 }
 
-export const checkoutUserAction = (username) => ({type: CHECKOUT, payload: {name: username}});
+export const logoutAction = () => ({type: LOGOUT});
+export const loginAction = (payload) => ({type: LOGIN, payload});
 
-const checkoutUserUseCase = (state, payload) => {
-    console.log(`Change user from ${state.user.name} to ${payload.name}`);
-    return {name: payload.name};
+const logoutUseCase = (state) => {
+    console.log(`User logout`);
+    return {...state, auth: {isAuth: false, credentials: {}}};
+};
+
+const loginUseCase = (state, payload) => {
+    console.log(`User login`);
+    return {...state, auth: {isAuth: true, credentials: payload}};
 };
