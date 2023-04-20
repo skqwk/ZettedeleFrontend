@@ -1,6 +1,6 @@
 const defaultState = {
     isAuth: false,
-    credentials: {}
+    authToken: null
 }
 
 const LOGOUT = 'LOGOUT';
@@ -11,7 +11,7 @@ export const authReducer = (state = defaultState, action) => {
         case LOGOUT:
             return logoutUseCase(state);
         case LOGIN:
-            return loginUseCase(state);
+            return loginUseCase(state, action.payload);
         default:
             return state;
     }
@@ -22,10 +22,10 @@ export const loginAction = (payload) => ({type: LOGIN, payload});
 
 const logoutUseCase = (state) => {
     console.log(`User logout`);
-    return {...state, auth: {isAuth: false, credentials: {}}};
+    return {...state, isAuth: false, authToken: null};
 };
 
 const loginUseCase = (state, payload) => {
     console.log(`User login`);
-    return {...state, auth: {isAuth: true, credentials: payload}};
+    return {...state, isAuth: true, authToken: payload.authToken};
 };

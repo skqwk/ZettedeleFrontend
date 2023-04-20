@@ -3,7 +3,7 @@ import {connectionReducer} from "./connectionReducer";
 import {vaultReducer} from "./vaultReducer";
 import {composeWithDevTools} from "redux-devtools-extension";
 import {profileReducer} from "./profileReducer";
-import {authReducer} from "./userReducer";
+import {authReducer} from "./authReducer";
 
 const rootReducer = combineReducers({
     connection: connectionReducer,

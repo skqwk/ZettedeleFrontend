@@ -5,6 +5,7 @@ import Select from "../components/UI/select/Select";
 import SearchService from "../API/SearchService";
 import '../styles/App.css';
 import {useSelector} from "react-redux";
+import Hint from "../components/UI/hint/Hint";
 
 const Search = () => {
     const offline = useSelector(state => state.connection.offline);
@@ -56,7 +57,7 @@ const Search = () => {
                                                                                aria-label="loupe">🔍</span>︎</RoundButton>
             </div>
             {offline
-                ? 'Отсутствует подключение к сети'
+                ? offline && <Hint>Подключение к сети отсутствует</Hint>
                 : items.length === 0
                     ? "Ничего не найдено"
                     : items.map(item =>
