@@ -3,10 +3,11 @@ import Input from "./UI/input/Input";
 import RoundButton from "./UI/roundbutton/RoundButton";
 import ColorBox from "./UI/colorbox/ColorBox";
 import {useDispatch, useSelector} from "react-redux";
-import Paragraph from "./Paragraph";
+import Paragraph from "./UI/paragraph/Paragraph";
 import Divider from "./UI/divider/Divider";
 import {useProfile} from "../hooks/useProfile";
 import {useNote} from "../hooks/useNote";
+import {removeNoteEvent, updateNoteEvent} from "../store/vaultReducer";
 
 const NoteFormV2 = ({save, visible, setVisible, address}) => {
     const dispatch = useDispatch();
@@ -47,13 +48,13 @@ const NoteFormV2 = ({save, visible, setVisible, address}) => {
     //         && formNote.title.trim().length === 0;
     // }
     //
-    // const deleteNote = () => {
-    //     if (formNote.id) {
-    //         dispatch(removeNoteEvent({noteId: formNote.id, vaultId: formNote.vaultId}));
-    //     }
-    //     clearForm();
-    //     setVisible(false);
-    // }
+
+    const deleteNote = () => {
+        if (formNote.id) {
+            dispatch(removeNoteEvent({noteId: formNote.id, vaultId: formNote.vaultId}));
+        }
+        setVisible(false);
+    }
 
     const defineColor = (note) => {
         return note.color
@@ -63,10 +64,15 @@ const NoteFormV2 = ({save, visible, setVisible, address}) => {
 
     const colors = ['white', '#F59475', '#F9C975', '#E4F693', '#B388F9', '#13E8FB', 'white'];
 
-    // const chooseColor = (color) => {
-    //     console.log("Choose color");
-    //     setFormNote({...formNote, color: color});
-    // }
+    const chooseColor = (color) => {
+        console.log("Choose color");
+        dispatch(updateNoteEvent({...formNote, updatedData: {color}, ...address}));
+    }
+
+    const setName = (name) => {
+        console.log("Set name");
+        dispatch(updateNoteEvent({...formNote, updatedData: {name}, ...address}));
+    }
 
     const getParagraphs = (formNote) => {
         const paragraphsMap = formNote.paragraphs;
@@ -79,25 +85,28 @@ const NoteFormV2 = ({save, visible, setVisible, address}) => {
                 ? paragraphsMap[nowParagraph.next]
                 : null
         }
-        return paragraphs;
+
+        return paragraphs.filter(p => p.content != null);
     }
 
     const paragraphs = getParagraphs(formNote);
 
     return (
         <div style={{
-            width: '600px',
+            padding: '20px',
+            width: '700px',
             display: 'flex',
             flexDirection: 'column',
             backgroundColor: defineColor(formNote),
             transition: '0.3s'
         }}>
             <Input placeholder="Заголовок"
-                   // onChange={e => setFormNote({...formNote, title: e.target.value})}
+                   onChange={e => setName(e.target.value)}
                    value={formNote.name}/>
             <Divider address={address} prev={null} next={formNote.head}/>
             {paragraphs.map(paragraph =>
                 <Paragraph
+                    style={{backgroundColor: defineColor(formNote)}}
                     paragraph={paragraph}
                     key={paragraph.id}
                     address={address}/>
@@ -110,7 +119,7 @@ const NoteFormV2 = ({save, visible, setVisible, address}) => {
                         <ColorBox chosen={formNote.color === color}
                                   key={id}
                                   color={color}
-                                  // onClick={e => chooseColor(color)}
+                                  onClick={e => chooseColor(color)}
                         />)}
                 </div>
             </div>

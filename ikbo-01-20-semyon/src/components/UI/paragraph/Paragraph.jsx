@@ -1,11 +1,13 @@
 import React, {useEffect, useRef} from 'react';
 import classes from "./Paragraph.module.css";
-import useAutosizeTextArea from "../hooks/useAutosizeTextArea";
+import useAutosizeTextArea from "../../../hooks/useAutosizeTextArea";
 import {useDispatch} from "react-redux";
-import {removeParagraphEvent, updateParagraphEvent} from "../store/vaultReducer";
-import useAutosizeTextAreaInit from "../hooks/useAutosizeTextAreaInit";
-import Divider from "./UI/divider/Divider";
-import {useProfile} from "../hooks/useProfile";
+import {removeParagraphEvent, updateParagraphEvent} from "../../../store/vaultReducer";
+import useAutosizeTextAreaInit from "../../../hooks/useAutosizeTextAreaInit";
+import Divider from "../divider/Divider";
+import {useProfile} from "../../../hooks/useProfile";
+import Sidebar from "./sidebar/Sidebar";
+import SidebarButton from "./sidebar/SidebarButton";
 
 const Paragraph = ({paragraph, address, ...props}) => {
     const dispatch = useDispatch();
@@ -18,15 +20,15 @@ const Paragraph = ({paragraph, address, ...props}) => {
     useEffect(() => useAutosizeTextAreaInit(textAreaRef.current), [])
 
     const updateContent = (e) => {
-        let text = e.target.value;
-        if (text.length === 0) {
-            dispatch(removeParagraphEvent({...address, id: paragraph.id}));
-        }
-        dispatch(updateParagraphEvent({...address, id: paragraph.id, content: text, nowUser}))
+        dispatch(updateParagraphEvent({...address, id: paragraph.id, content: e.target.value, nowUser}));
+    }
+
+    const remove = () => {
+        dispatch(removeParagraphEvent({...address, id: paragraph.id, nowUser}));
     }
 
     return (
-        <div>
+        <div style={{position: 'relative'}}>
             <textarea
                 ref={textAreaRef}
                 onChange={updateContent}
@@ -34,6 +36,9 @@ const Paragraph = ({paragraph, address, ...props}) => {
                 className={classes.paragraph} {...props}>
 
             </textarea>
+            <Sidebar>
+                <SidebarButton onClick={e => remove()}/>
+            </Sidebar>
             <Divider address={address} prev={paragraph.id} next={paragraph.next}/>
         </div>
     );

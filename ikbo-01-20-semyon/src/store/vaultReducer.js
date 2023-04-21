@@ -56,9 +56,12 @@ const defaultState = {
 
 
 const CREATE_VAULT = 'CREATE_VAULT';
+
 const SAVE_NOTE = 'SAVE_NOTE';
 const CREATE_NOTE = 'CREATE_NOTE';
 const REMOVE_NOTE = 'REMOVE_NOTE';
+const UPDATE_NOTE = 'UPDATE_NOTE';
+
 const CREATE_PARAGRAPH = 'CREATE_PARAGRAPH';
 const REMOVE_PARAGRAPH = 'REMOVE_PARAGRAPH';
 const UPDATE_PARAGRAPH = 'UPDATE_PARAGRAPH';
@@ -68,6 +71,7 @@ const LOAD_NOTES = 'LOAD_NOTES';
 export const createVaultEvent = () => ({type: CREATE_VAULT})
 export const saveNoteEvent = () => ({type: SAVE_NOTE})
 export const createNoteEvent = () => ({type: CREATE_NOTE})
+export const updateNoteEvent = (payload) => ({type: UPDATE_NOTE, payload})
 export const removeNoteEvent = (payload) => ({type: REMOVE_NOTE, payload})
 export const createParagraphEvent = (payload) => ({type: CREATE_PARAGRAPH, payload})
 export const removeParagraphEvent = (payload) => ({type: REMOVE_PARAGRAPH, payload})
@@ -83,6 +87,8 @@ export const vaultReducer = (state = defaultState, action) => {
             return createNoteUseCase(state);
         case REMOVE_NOTE:
             return removeNoteUseCase(state, action.payload);
+        case UPDATE_NOTE:
+            return updateNoteUseCase(state, action.payload);
         case CREATE_PARAGRAPH:
             return createParagraphUseCase(state, action.payload);
         case REMOVE_PARAGRAPH:
@@ -109,6 +115,18 @@ const createNoteUseCase = (state) => {
     return state;
 }
 
+const updateNoteUseCase = (state, payload) => {
+    console.log("Update note");
+    let newNote = getNote(state.vaults, payload);
+    newNote = {...newNote, ...payload.updatedData}
+
+    let newVault = getVault(state.vaults, payload);
+    newVault.notes = [...newVault.notes.filter(n => n.id !== payload.noteId), newNote];
+    let newVaults = [...state.vaults.filter(v => v.id !== payload.vaultId), newVault]
+
+    return {vaults: newVaults};
+}
+
 const loadNotesUseCase = (state, payload) => {
     let vaults = NoteManager.loadNotesInMemory(payload.username);
 
@@ -132,7 +150,6 @@ const createParagraphUseCase = (state, payload) => {
 
     let newVault = getVault(state.vaults, payload);
     newVault.notes = [...newVault.notes.filter(n => n.id !== payload.noteId), newNote];
-
     let newVaults = [...state.vaults.filter(v => v.id !== payload.vaultId), newVault]
 
     NoteManager.updateNote({
@@ -146,8 +163,6 @@ const createParagraphUseCase = (state, payload) => {
         },
     })
 
-    console.log(payload);
-    console.log(newVaults);
     return {vaults: newVaults};
 }
 
@@ -168,12 +183,14 @@ const removeParagraphUseCase = (state, payload) => {
 
     let newVault = getVault(state.vaults, payload);
     newVault.notes = [...newVault.notes.filter(n => n.id !== payload.noteId), newNote];
-
     let newVaults = [...state.vaults.filter(v => v.id !== payload.vaultId), newVault]
 
-    console.log(paragraph);
-    console.log(payload);
-    console.log(newVaults);
+    NoteManager.updateNote({
+        ...payload,
+        event: REMOVE_PARAGRAPH,
+        body: {id: paragraph.id},
+    })
+
     return {vaults: newVaults};
 }
 
@@ -187,12 +204,8 @@ const updateParagraphUseCase = (state, payload) => {
 
     let newVault = getVault(state.vaults, payload);
     newVault.notes = [...newVault.notes.filter(n => n.id !== payload.noteId), newNote];
-
     let newVaults = [...state.vaults.filter(v => v.id !== payload.vaultId), newVault]
 
-    console.log(paragraph);
-    console.log(payload);
-    console.log(newVaults);
     NoteManager.updateNote({
         ...payload,
         event: UPDATE_PARAGRAPH,

@@ -5,7 +5,6 @@ export const useNote = (vaultId, noteId) => {
 }
 
 const getNoteByVaultIdAndNoteId = (vaults, vaultId, noteId) => {
-    console.log(vaults);
     return vaults.find(v => v.id === vaultId)
         .notes.find(n => n.id === noteId);
 }
