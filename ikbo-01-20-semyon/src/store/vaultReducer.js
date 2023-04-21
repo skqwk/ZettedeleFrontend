@@ -3,7 +3,6 @@ import {HLC} from "../core/HLC";
 
 // Инициализируем стартовое состояние из NoteManager
 // NoteManager.initState()
-
 const defaultState = {
     vaults: [
         {
@@ -120,10 +119,7 @@ const updateNoteUseCase = (state, payload) => {
     let newNote = getNote(state.vaults, payload);
     newNote = {...newNote, ...payload.updatedData}
 
-    let newVault = getVault(state.vaults, payload);
-    newVault.notes = [...newVault.notes.filter(n => n.id !== payload.noteId), newNote];
-    let newVaults = [...state.vaults.filter(v => v.id !== payload.vaultId), newVault]
-
+    let newVaults = putUpdatedNoteIntoVaults(newNote, state.vaults, payload);
     return {vaults: newVaults};
 }
 
@@ -148,9 +144,7 @@ const createParagraphUseCase = (state, payload) => {
     }
     newNote.paragraphs[newParagraph.id] = newParagraph;
 
-    let newVault = getVault(state.vaults, payload);
-    newVault.notes = [...newVault.notes.filter(n => n.id !== payload.noteId), newNote];
-    let newVaults = [...state.vaults.filter(v => v.id !== payload.vaultId), newVault]
+    let newVaults = putUpdatedNoteIntoVaults(newNote, state.vaults, payload);
 
     NoteManager.updateNote({
         ...payload,
@@ -181,9 +175,7 @@ const removeParagraphUseCase = (state, payload) => {
 
     delete newNote.paragraphs[payload.id];
 
-    let newVault = getVault(state.vaults, payload);
-    newVault.notes = [...newVault.notes.filter(n => n.id !== payload.noteId), newNote];
-    let newVaults = [...state.vaults.filter(v => v.id !== payload.vaultId), newVault]
+    let newVaults = putUpdatedNoteIntoVaults(newNote, state.vaults, payload);
 
     NoteManager.updateNote({
         ...payload,
@@ -202,9 +194,7 @@ const updateParagraphUseCase = (state, payload) => {
     let newNote = getNote(state.vaults, payload);
     newNote.paragraphs[payload.id] = paragraph;
 
-    let newVault = getVault(state.vaults, payload);
-    newVault.notes = [...newVault.notes.filter(n => n.id !== payload.noteId), newNote];
-    let newVaults = [...state.vaults.filter(v => v.id !== payload.vaultId), newVault]
+    let newVaults = putUpdatedNoteIntoVaults(newNote, state.vaults, payload);
 
     NoteManager.updateNote({
         ...payload,
@@ -213,6 +203,12 @@ const updateParagraphUseCase = (state, payload) => {
     })
 
     return {vaults: newVaults};
+}
+
+const putUpdatedNoteIntoVaults = (newNote, vaults, payload) => {
+    let newVault = getVault(vaults, payload);
+    newVault.notes = [...newVault.notes.filter(n => n.id !== payload.noteId), newNote];
+    return [...vaults.filter(v => v.id !== payload.vaultId), newVault];
 }
 
 const findPrevParagraph = (head, paragraphs, id) => {
