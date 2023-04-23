@@ -4,12 +4,11 @@ const createNoteOperation = (payload, note) => {
     note.name = payload.name;
     note.id = payload.systemName;
     note.head = null;
-    console.log(note);
+    note.deleted = false;
 }
 
 const createParagraphOperation = (payload, note) => {
     console.log('createParagraphOperation');
-    console.log(note.paragraphs);
     let paragraph = {
         insertKey: payload.happenAt,
         deleteKey: payload.happenAt,
@@ -21,13 +20,9 @@ const createParagraphOperation = (payload, note) => {
 
     if (payload.insertKey !== null) {
         prevParagraph = note.paragraphs[payload.insertKey];
-        console.log('Find prevParagraph:');
-        console.log(prevParagraph);
     }
 
     if (payload.insertKey === null) {
-        console.log('INSERT HEAD');
-        console.log(note.head);
         if (note.head === null || note.head.localeCompare(paragraph.insertKey) < 0) {
             if (note.head !== null) {
                 paragraph.next = note.head;
@@ -78,9 +73,22 @@ const removeParagraphOperation = (payload, note) => {
     }
 }
 
+const removeNoteOperation = (payload, note) => {
+    console.log('removeNoteOperation');
+    note.deleted = true;
+}
+
+const updateNoteOperation = (payload, note) => {
+    console.log('updateNoteOperation');
+    let oldNote = {...note}
+    note = {...oldNote, payload};
+}
+
 export class ParagraphRGA {
     static eventMap = {
         'CREATE_NOTE': createNoteOperation,
+        'UPDATE_NOTE': updateNoteOperation,
+        'REMOVE_NOTE': removeNoteOperation,
         'CREATE_PARAGRAPH': createParagraphOperation,
         'UPDATE_PARAGRAPH': updateParagraphOperation,
         'REMOVE_PARAGRAPH': removeParagraphOperation,

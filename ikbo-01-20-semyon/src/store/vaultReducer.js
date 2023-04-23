@@ -69,7 +69,7 @@ const LOAD_NOTES = 'LOAD_NOTES';
 
 export const createVaultEvent = () => ({type: CREATE_VAULT})
 export const saveNoteEvent = () => ({type: SAVE_NOTE})
-export const createNoteEvent = () => ({type: CREATE_NOTE})
+export const createNoteEvent = (payload) => ({type: CREATE_NOTE, payload})
 export const updateNoteEvent = (payload) => ({type: UPDATE_NOTE, payload})
 export const removeNoteEvent = (payload) => ({type: REMOVE_NOTE, payload})
 export const createParagraphEvent = (payload) => ({type: CREATE_PARAGRAPH, payload})
@@ -83,7 +83,7 @@ export const vaultReducer = (state = defaultState, action) => {
         case CREATE_VAULT:
             return createVaultUseCase(state);
         case CREATE_NOTE:
-            return createNoteUseCase(state);
+            return createNoteUseCase(state, action.payload);
         case REMOVE_NOTE:
             return removeNoteUseCase(state, action.payload);
         case UPDATE_NOTE:
@@ -109,15 +109,17 @@ const createVaultUseCase = (state) => {
             {id: '', createdAt: ''}]
     }
 }
-const createNoteUseCase = (state) => {
-    console.log("Create note");
-    return state;
+const createNoteUseCase = (state, payload) => {
+    NoteManager.createNote(payload)
+    let newNote = {deleted: false, id: payload.noteId, paragraphs: {}};
+    let newVaults = putUpdatedNoteIntoVaults(newNote, state.vaults, payload);
+    return {vaults: newVaults};
 }
 
 const updateNoteUseCase = (state, payload) => {
     console.log("Update note");
-    let newNote = getNote(state.vaults, payload);
-    newNote = {...newNote, ...payload.updatedData}
+    let oldNote = getNote(state.vaults, payload);
+    let newNote = {...oldNote, ...payload.updatedData}
 
     let newVaults = putUpdatedNoteIntoVaults(newNote, state.vaults, payload);
     return {vaults: newVaults};
@@ -131,9 +133,9 @@ const loadNotesUseCase = (state, payload) => {
 
 const createParagraphUseCase = (state, payload) => {
     console.log("CreateParagraphUseCase");
-
     let newParagraph = {id: HLC.timestamp(), content: '', prev: payload.prev, next: payload.next};
-    let newNote = getNote(state.vaults, payload);
+    let oldNote = getNote(state.vaults, payload);
+    let newNote = {...oldNote};
     console.log(newParagraph);
     if (newParagraph.prev === null) {
         newNote.head = newParagraph.id;
@@ -163,7 +165,8 @@ const createParagraphUseCase = (state, payload) => {
 const removeParagraphUseCase = (state, payload) => {
     console.log("Remove paragraph");
     let paragraph = getParagraph(state.vaults, payload, payload.id);
-    let newNote = getNote(state.vaults, payload);
+    let oldNote = getNote(state.vaults, payload);
+    let newNote = {...oldNote};
 
     if (newNote.head === payload.id) {
         newNote.head = newNote.paragraphs[payload.id].next;
@@ -206,9 +209,9 @@ const updateParagraphUseCase = (state, payload) => {
 }
 
 const putUpdatedNoteIntoVaults = (newNote, vaults, payload) => {
-    let newVault = getVault(vaults, payload);
-    newVault.notes = [...newVault.notes.filter(n => n.id !== payload.noteId), newNote];
-    return [...vaults.filter(v => v.id !== payload.vaultId), newVault];
+    let vault = getVault(vaults, payload);
+    vault.notes = [...vault.notes.filter(n => n.id !== payload.noteId), newNote];
+    return [...vaults.filter(v => v.id !== payload.vaultId), vault];
 }
 
 const findPrevParagraph = (head, paragraphs, id) => {
@@ -222,11 +225,14 @@ const findPrevParagraph = (head, paragraphs, id) => {
     return nowParagraph;
 }
 
-const getVault = (vaults, address) => ({...vaults.find(v => v.id === address.vaultId)});
-const getNote = (vaults, address) => ({...getVault(vaults, address).notes.find(n => n.id === address.noteId)});
+const getVault = (vaults, address) => vaults.find(v => v.id === address.vaultId);
+const getNote = (vaults, address) => getVault(vaults, address).notes.find(n => n.id === address.noteId);
 const getParagraph = (vaults, address, paragraphId) => ({...getNote(vaults, address).paragraphs[paragraphId]});
 
 const removeNoteUseCase = (state, payload) => {
     console.log(`Remove note with id = ${payload.noteId} from vault with id = ${payload.vaultId}`);
-    return state;
+    let vault = getVault(state.vaults, payload);
+    vault.notes =[...vault.notes.filter(n => n.id !== payload.noteId)];
+    NoteManager.removeNote()
+    return {vaults: [...state.vaults.filter(v => v.id !== payload.vaultId), vault]};
 }

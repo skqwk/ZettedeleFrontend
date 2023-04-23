@@ -2,9 +2,7 @@ import Profile from "../pages/Profile";
 import Vaults from "../pages/Vaults";
 import Search from "../pages/Search";
 import About from "../pages/About";
-import Setup from "../pages/Setup";
 import Notes from "../pages/Notes";
-import Test from "../pages/Test";
 
 export const routes = [
     {name: "Профиль", to: "/profile", element: Profile},

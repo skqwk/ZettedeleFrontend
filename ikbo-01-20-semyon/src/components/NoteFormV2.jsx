@@ -1,68 +1,23 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import Input from "./UI/input/Input";
 import RoundButton from "./UI/roundbutton/RoundButton";
 import ColorBox from "./UI/colorbox/ColorBox";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import Paragraph from "./UI/paragraph/Paragraph";
 import Divider from "./UI/divider/Divider";
-import {useProfile} from "../hooks/useProfile";
-import {useNote} from "../hooks/useNote";
 import {removeNoteEvent, updateNoteEvent} from "../store/vaultReducer";
+import {getParagraphs} from "../core/getParagraphs";
 
-const NoteFormV2 = ({save, visible, setVisible, address}) => {
+const NoteFormV2 = ({address, formNote, remove}) => {
     const dispatch = useDispatch();
-    const offline = useSelector(state => state.connection.offline);
-    const nowUser = useProfile();
-    const formNote = useNote(address.vaultId, address.noteId);
-
-    useEffect(() => {
-        // console.log('Form note is changed!');
-        // console.log(formNote);
-    }, [formNote])
-
-    //const formNote = useSelector(state => getNoteByVaultIdAndNoteId(state.vault.vaults, address.vaultId, address.noteId))
-
-    // const clearForm = () => {
-    //     setFormNote({title: '', content: '', color: 'white'});
-    // }
-
-    // useEffect(() => {
-    //     if (!visible) {
-    //         if (!isFormEmpty(formNote)) {
-    //             enrichFormNote(formNote);
-    //             dispatch(removeNoteEvent({noteId: formNote.id, vaultId: formNote.vaultId}));
-    //             save(formNote);
-    //         }
-    //         clearForm();
-    //     }
-    // }, [visible])
-    //
-    // const enrichFormNote = (formNote) => {
-    //     formNote.id = formNote.id
-    //         ? formNote.id
-    //         : Date.now()
-    //     formNote.date = new Date().toLocaleDateString();
-    // }
-    // const isFormEmpty = (formNote) => {
-    //     return formNote.content.trim().length === 0
-    //         && formNote.title.trim().length === 0;
-    // }
-    //
-
-    const deleteNote = () => {
-        if (formNote.id) {
-            dispatch(removeNoteEvent({noteId: formNote.id, vaultId: formNote.vaultId}));
-        }
-        setVisible(false);
-    }
+    const paragraphs = getParagraphs(formNote);
+    const colors = ['white', '#F59475', '#F9C975', '#E4F693', '#B388F9', '#13E8FB', 'white'];
 
     const defineColor = (note) => {
         return note.color
             ? note.color
             : colors[0];
     }
-
-    const colors = ['white', '#F59475', '#F9C975', '#E4F693', '#B388F9', '#13E8FB', 'white'];
 
     const chooseColor = (color) => {
         console.log("Choose color");
@@ -73,23 +28,6 @@ const NoteFormV2 = ({save, visible, setVisible, address}) => {
         console.log("Set name");
         dispatch(updateNoteEvent({...formNote, updatedData: {name}, ...address}));
     }
-
-    const getParagraphs = (formNote) => {
-        const paragraphsMap = formNote.paragraphs;
-        let nowParagraph = paragraphsMap[formNote.head];
-        let paragraphs = [];
-        while (nowParagraph) {
-            paragraphs.push(nowParagraph);
-
-            nowParagraph = nowParagraph.next
-                ? paragraphsMap[nowParagraph.next]
-                : null
-        }
-
-        return paragraphs.filter(p => p.content != null);
-    }
-
-    const paragraphs = getParagraphs(formNote);
 
     return (
         <div style={{
@@ -113,7 +51,7 @@ const NoteFormV2 = ({save, visible, setVisible, address}) => {
             )
             }
             <div style={{display: 'flex', alignItems: "center"}}>
-                <RoundButton ><span role="img" aria-label="delete">🗑️</span></RoundButton>
+                <RoundButton onClick={() => remove()}><span role="img" aria-label="delete">🗑️</span></RoundButton>
                 <div style={{display: 'flex', alignItems: "center"}}>
                     {colors.map((color, id) =>
                         <ColorBox chosen={formNote.color === color}

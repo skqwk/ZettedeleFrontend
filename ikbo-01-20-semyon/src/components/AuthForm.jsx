@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import Button from "./UI/button/Button";
 import {useSelector} from "react-redux";
-import {useProfile} from "../hooks/useProfile";
 import Hint from "./UI/hint/Hint";
 import Modal from "./UI/modal/Modal";
 import RegisterForm from "./RegisterForm";
@@ -9,8 +8,6 @@ import LoginForm from "./LoginForm";
 
 const AuthForm = () => {
     const offline = useSelector(state => state.connection.offline);
-    const nowUser = useProfile();
-    const isAuth = useSelector(state => state.auth.isAuth);
     const [registerForm, setRegisterForm] = useState(false);
     const [loginForm, setLoginForm] = useState(false);
 

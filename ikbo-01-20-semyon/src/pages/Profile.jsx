@@ -1,29 +1,17 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Switch from "../components/UI/switch/Switch";
 import {useDispatch, useSelector} from "react-redux";
-import {useProfile} from "../hooks/useProfile";
 import {offlineAction, onlineAction} from "../store/connectionReducer";
 import Button from "../components/UI/button/Button";
 import Header from "../components/UI/header/Header";
 import Hint from "../components/UI/hint/Hint";
-import Modal from "../components/UI/modal/Modal";
-import Input from "../components/UI/input/Input";
-import RegisterForm from "../components/RegisterForm";
-import LoginForm from "../components/LoginForm";
-import {logoutAction} from "../store/authReducer";
 import AuthForm from "../components/AuthForm";
 import ProfileForm from "../components/ProfileForm";
 
 const Profile = () => {
     const dispatch = useDispatch();
     const offline = useSelector(state => state.connection.offline);
-    const nowUser = useProfile();
     const isAuth = useSelector(state => state.auth.isAuth);
-
-    const setup = {
-        domain: 'RU',
-        server: '192.168.10.11'
-    }
 
     const toggle = (e) => {
         const checked = e.target.checked;

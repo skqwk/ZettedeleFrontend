@@ -1,60 +1,64 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import Modal from "../components/UI/modal/Modal";
-import NoteFormV2 from "../components/NoteFormV2";
-import {useNote} from "../hooks/useNote";
 import {loadNotesEvent} from "../store/vaultReducer";
 import SearchBar from "../components/SearchBar";
 import RoundButton from "../components/UI/roundbutton/RoundButton";
 import Select from "../components/UI/select/Select";
 import {useVault} from "../hooks/useVault";
+import NoteListV2 from "../components/NoteListV2";
+import EditNoteForm from "../components/EditNoteForm";
+import CreateNoteForm from "../components/CreateNoteForm";
+import {useProfile} from "../hooks/useProfile";
+import {v4} from 'uuid';
+
 
 const Notes = () => {
-    const [nowVault, setNowVault] = useState('study');
-    const [nowNote, setNowNote] = useState('note1');
-    const [visible, setVisible] = useState(true);
-    const formNote = useNote(nowVault, nowNote);
-    const vault = useVault(nowVault);
-    const onlyVaults = useSelector(state => state.vault.vaults.map(v => ({value: v.id, name: v.name})))
+    const [vaultId, setVaultId] = useState('study');
+    const [noteId, setNoteId] = useState(null);
+
+    const vault = useVault(vaultId);
+    const vaultNames = useSelector(state => state.vault.vaults.map(v => ({value: v.id, name: v.name})))
+
     const dispatch = useDispatch();
-    const nowUser = useSelector(state => state.profile.name);
-    // const [formNote, setFormNote] = useState({content: '', title: '', color: 'white'})
+    const nowUser = useProfile();
 
     const [query, setQuery] = useState('');
+    const address = {noteId, vaultId};
 
     const createNewVault = () => {
         console.log("Create new Vault");
-    }
-
-    const openNoteForm = () => {
-        setVisible(true);
     }
 
     useEffect(() => {
         dispatch(loadNotesEvent({username: nowUser}));
     }, [])
 
+    const [newNoteId, setNewNoteId] = useState(null);
+
+    const openCreateNoteForm = () => {
+        setNewNoteId(v4());
+    }
+
     return (
         <div>
-            <Modal visible={visible} setVisible={setVisible} contentBackground={formNote.color}>
-                <NoteFormV2
-                    address={{noteId: nowNote, vaultId: nowVault}}
-                    visible={visible}
-                    setVisible={setVisible}
-                    formNote={formNote}/>
-            </Modal>
-
+            <CreateNoteForm vaultId={vaultId} newNoteId={newNoteId}/>
+            <EditNoteForm vaultId={vaultId} noteId={noteId} setNoteId={setNoteId}/>
             <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '30px'}}>
                 <SearchBar query={query} setQuery={setQuery}/>
-                <RoundButton disabled={true} onClick={openNoteForm}>
+                <RoundButton disabled={false} onClick={openCreateNoteForm}>
                     <span role="img" aria-label="pen">✎</span></RoundButton>
                 <Select
                     defaultValue="Выбор хранилища"
-                    value={nowVault}
-                    onChange={setNowVault}
-                    options={onlyVaults}/>
+                    value={vaultId}
+                    onChange={setVaultId}
+                    options={vaultNames}/>
                 <RoundButton onClick={createNewVault}>+</RoundButton>
             </div>
+
+            <NoteListV2 notes={vault.notes.filter(note => note.deleted === false)}
+                        setNoteId={setNoteId}
+                        address={address}
+            />
         </div>
     );
 };
