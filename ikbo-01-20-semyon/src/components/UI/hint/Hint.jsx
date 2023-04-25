@@ -1,5 +1,6 @@
 import React from 'react';
 import classes from "./Hint.module.css";
+
 const Hint = ({children, ...props}) => {
     return (
         <div className={classes.hint} {...props}>

@@ -5,7 +5,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {offlineAction, onlineAction} from "../store/connectionReducer";
 import {loadNotesEvent} from "../store/vaultReducer";
 import RoundButton from "../components/UI/roundbutton/RoundButton";
-import {NoteManager} from "../core/NoteManager";
 import {useProfile} from "../hooks/useProfile";
 
 const Setup = () => {
@@ -33,7 +32,7 @@ const Setup = () => {
                 <Switch switchName="ИНТЕРНЕТ" onToggle={toggle} checked={!offline}/>
                 <Input inputName="ДОМЕН" readOnly value={setup.domain}/>
                 <Input inputName="СЕРВЕР" readOnly value={setup.server}/>
-                <RoundButton onClick={e => dispatch(loadNotesEvent({username: nowUser}))}>⟳</RoundButton>
+                <RoundButton onClick={() => dispatch(loadNotesEvent({username: nowUser}))}>⟳</RoundButton>
             </div>
         </div>
     );

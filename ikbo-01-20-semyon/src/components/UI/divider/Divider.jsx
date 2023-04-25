@@ -12,8 +12,9 @@ const Divider = ({address, prev, next}) => {
         <div className={classes.dividerContainer}>
             <div className={classes.divider}/>
             <div className={classes.add}
-                 onClick={e => dispatch(createParagraphEvent({...address, prev, next, nowUser}))}
-            >+</div>
+                 onClick={() => dispatch(createParagraphEvent({...address, prev, next, nowUser}))}
+            >+
+            </div>
             <div className={classes.divider}/>
         </div>
     );

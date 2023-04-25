@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import Modal from "./UI/modal/Modal";
+import Modal from "../../UI/modal/Modal";
 import NoteFormV2 from "./NoteFormV2";
-import {useNote} from "../hooks/useNote";
-import {removeNoteEvent} from "../store/vaultReducer";
-import {NoteManager} from "../core/NoteManager";
+import {useNote} from "../../../hooks/useNote";
+import {removeNoteEvent} from "../../../store/vaultReducer";
+import {NoteManager} from "../../../core/NoteManager";
 import {useDispatch} from "react-redux";
-import {useProfile} from "../hooks/useProfile";
+import {useProfile} from "../../../hooks/useProfile";
 
 const EditNoteForm = ({vaultId, noteId, setNoteId, ...props}) => {
     const [visible, setVisible] = useState(false);
@@ -26,6 +26,7 @@ const EditNoteForm = ({vaultId, noteId, setNoteId, ...props}) => {
     }, [noteId])
 
     const remove = () => {
+        setVisible(false);
         let payload = {vaultId, noteId: noteId, nowUser};
         dispatch(removeNoteEvent(payload))
         NoteManager.flushUpdates(noteId);
@@ -35,12 +36,13 @@ const EditNoteForm = ({vaultId, noteId, setNoteId, ...props}) => {
 
     return (
         <div>
-            <Modal visible={visible} close={close} backgroundColor={'white'}>
-                {visible && <NoteFormV2
+            {visible && <Modal visible={visible} close={close} backgroundColor={formNote.color}>
+                <NoteFormV2
                     address={{vaultId, noteId}}
                     remove={remove}
-                    formNote={formNote}/>}
+                    formNote={formNote}/>
             </Modal>
+            }
         </div>
     );
 };

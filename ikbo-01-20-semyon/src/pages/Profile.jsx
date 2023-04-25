@@ -7,11 +7,15 @@ import Header from "../components/UI/header/Header";
 import Hint from "../components/UI/hint/Hint";
 import AuthForm from "../components/AuthForm";
 import ProfileForm from "../components/ProfileForm";
+import Input from "../components/UI/input/Input";
+import {useProfile} from "../hooks/useProfile";
+import {checkoutProfileAction} from "../store/profileReducer";
 
 const Profile = () => {
     const dispatch = useDispatch();
     const offline = useSelector(state => state.connection.offline);
     const isAuth = useSelector(state => state.auth.isAuth);
+    const nowProfile = useProfile();
 
     const toggle = (e) => {
         const checked = e.target.checked;
@@ -26,10 +30,17 @@ const Profile = () => {
         console.log('Sync notes');
     }
 
+    const resetProfile = () => {
+        dispatch(checkoutProfileAction({name: null}));
+    }
+
     return (
         <div className="profile">
-            <Header size={18}>ДАННЫЕ ПРОФИЛЯ</Header>
             <div style={{width: "60%", alignItems: 'center', display: 'flex', flexDirection: 'column'}}>
+                <Header size={18}>ТЕКУЩИЙ ПРОФИЛЬ</Header>
+                <Input inputName="НАЗВАНИЕ ПРОФИЛЯ" readOnly value={nowProfile}/>
+                <Button onClick={() => resetProfile()}>СМЕНИТЬ ПРОФИЛЬ</Button>
+                <Header size={18}>АККАУНТ</Header>
                 {isAuth
                     ? <ProfileForm/>
                     : <AuthForm/>
@@ -38,7 +49,7 @@ const Profile = () => {
                 {!isAuth && <Hint>Авторизуйтесь, чтобы синхронизировать заметки</Hint>}
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end'}}>
                     <Switch switchName="ИНТЕРНЕТ" onToggle={toggle} checked={!offline}/>
-                    <Button onClick={e => syncNotes()} disabled={!isAuth || offline}>СИНХРОНИЗИРОВАТЬ</Button>
+                    <Button onClick={() => syncNotes()} disabled={!isAuth || offline}>СИНХРОНИЗИРОВАТЬ</Button>
                     {/*<RoundButton onClick={e => dispatch(loadNotesEvent({username: nowUser}))}>⟳</RoundButton>*/}
                 </div>
             </div>

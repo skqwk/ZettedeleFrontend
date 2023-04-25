@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import SearchBar from "../components/SearchBar";
-import NoteList from "../components/NoteList";
+import NoteList from "../components/note/v1/NoteList";
 import Select from "../components/UI/select/Select";
 import RoundButton from "../components/UI/roundbutton/RoundButton";
 import {useNotes} from "../hooks/useNotes";
 import {vaults} from "../utils/constants";
 import {useVaults} from "../hooks/useVaults";
 import Modal from "../components/UI/modal/Modal";
-import NoteForm from "../components/NoteForm";
+import NoteForm from "../components/note/v1/NoteForm";
 
 const Vaults = () => {
     const [nowVault, setNowVault] = useState('');
@@ -27,7 +27,7 @@ const Vaults = () => {
         }
     }, [nowVault])
 
-    const createNewVault = (e) => {
+    const createNewVault = () => {
         console.log("Create new vault");
     }
 

@@ -1,5 +1,5 @@
 const defaultState = {
-    name: "skqwk"
+    name: null
 }
 
 const CHECKOUT = 'CHECKOUT';
@@ -13,9 +13,10 @@ export const profileReducer = (state = defaultState, action) => {
     }
 }
 
-export const checkoutProfileAction = (name) => ({type: CHECKOUT, payload: {name}});
+export const checkoutProfileAction = (payload) => ({type: CHECKOUT, payload});
 
 const checkoutProfileUseCase = (state, payload) => {
-    console.log(`Change user from ${state.profile.name} to ${payload.name}`);
-    return {...state, profile: payload.name};
+    console.log(payload);
+    console.log(`Change user from ${state.name} to ${payload.name}`);
+    return {name: payload.name};
 };

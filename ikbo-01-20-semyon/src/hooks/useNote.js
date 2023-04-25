@@ -17,6 +17,7 @@ const getNoteByVaultIdAndNoteId = (vaults, vaultId, noteId) => {
         note = vaults.find(v => v.id === vaultId)
             .notes.find(n => n.id === noteId);
     }
+    console.log(noteId);
     console.log(note);
     return note;
 }

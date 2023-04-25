@@ -1,10 +1,24 @@
-
 const createNoteOperation = (payload, note) => {
     console.log('createNoteOperation');
-    note.name = payload.name;
-    note.id = payload.systemName;
+    note.title = '';
+    note.id = payload.id;
     note.head = null;
     note.deleted = false;
+    note.createdAt = payload.createdAt;
+    note.color = 'white';
+}
+
+
+const removeNoteOperation = (payload, note) => {
+    console.log('removeNoteOperation');
+    note.deleted = true;
+}
+
+const updateNoteOperation = (payload, note) => {
+    console.log('updateNoteOperation');
+    let field = Object.keys(payload)[0];
+    let value = Object.values(payload)[0]
+    note[field] = value;
 }
 
 const createParagraphOperation = (payload, note) => {
@@ -73,16 +87,6 @@ const removeParagraphOperation = (payload, note) => {
     }
 }
 
-const removeNoteOperation = (payload, note) => {
-    console.log('removeNoteOperation');
-    note.deleted = true;
-}
-
-const updateNoteOperation = (payload, note) => {
-    console.log('updateNoteOperation');
-    let oldNote = {...note}
-    note = {...oldNote, payload};
-}
 
 export class ParagraphRGA {
     static eventMap = {

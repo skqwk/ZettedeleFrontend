@@ -19,7 +19,7 @@ const Test = () => {
             })
     }
 
-    const getProfile =  async (authToken) =>  {
+    const getProfile = async (authToken) => {
         const config = {
             headers: {
                 'Authorization': authToken
@@ -31,7 +31,7 @@ const Test = () => {
     return (
         <div>
             <TextArea value={token} onChange={e => setToken(e.target.value)}/>
-            <Button onClick={e => sendRequest()}>ОТПРАВИТЬ</Button>
+            <Button onClick={() => sendRequest()}>ОТПРАВИТЬ</Button>
             <TextArea value={response} readonly/>
         </div>
     );

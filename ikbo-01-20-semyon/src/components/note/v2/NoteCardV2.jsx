@@ -1,5 +1,5 @@
 import React from 'react';
-import {getParagraphs} from "../core/getParagraphs";
+import {getParagraphs} from "../../../core/getParagraphs";
 
 const NoteCardV2 = ({note, remove, ...props}) => {
 
@@ -8,7 +8,7 @@ const NoteCardV2 = ({note, remove, ...props}) => {
     const content = getParagraphs(note)
         .map(paragraph => paragraph.content)
         .join(" ")
-        .substring(0, 200)
+        .substring(0, 180)
         .concat("...");
 
     const removeNote = (e) => {
@@ -16,20 +16,14 @@ const NoteCardV2 = ({note, remove, ...props}) => {
         remove(note.id);
     }
 
-    const defineColor = (note) => {
-        return note.color
-            ? note.color
-            : colors[note.id % colors.length];
-    }
-
     return (
         <div className="noteCard"
-             style={{background: defineColor(note)}}
+             style={{background: note.color}}
              {...props}>
-            <h4>{note.name}</h4>
+            <h4>{note.title.substring(0, 40)}</h4>
             <p>{content}</p>
             <div className="noteCardControl">
-                <p className='noteDate'>{note.date}</p>
+                <p className='noteDate'>{note.createdAt}</p>
                 <span role="img" aria-label="delete" onClick={removeNote}>🗑️</span>
             </div>
         </div>

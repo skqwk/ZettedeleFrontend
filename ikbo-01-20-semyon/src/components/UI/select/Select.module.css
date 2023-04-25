@@ -10,5 +10,5 @@ select {
 }
 
 .selectContainer {
-    width: 25%;
+    width: fit-content;
 }

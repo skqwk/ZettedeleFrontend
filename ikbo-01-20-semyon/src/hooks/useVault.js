@@ -6,5 +6,6 @@ export const useVault = (vaultId) => {
 
 const getVaultByVaultId = (vaults, vaultId) => {
     console.log('LOAD VAULT WITH NAME: ', vaultId);
+    if (vaultId === '') return {notes: []};
     return vaults.find(v => v.id === vaultId);
 }

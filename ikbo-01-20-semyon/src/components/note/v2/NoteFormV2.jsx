@@ -1,17 +1,19 @@
 import React from 'react';
-import Input from "./UI/input/Input";
-import RoundButton from "./UI/roundbutton/RoundButton";
-import ColorBox from "./UI/colorbox/ColorBox";
+import Input from "../../UI/input/Input";
+import RoundButton from "../../UI/roundbutton/RoundButton";
+import ColorBox from "../../UI/colorbox/ColorBox";
 import {useDispatch} from "react-redux";
-import Paragraph from "./UI/paragraph/Paragraph";
-import Divider from "./UI/divider/Divider";
-import {removeNoteEvent, updateNoteEvent} from "../store/vaultReducer";
-import {getParagraphs} from "../core/getParagraphs";
+import Paragraph from "../../UI/paragraph/Paragraph";
+import Divider from "../../UI/divider/Divider";
+import {updateNoteEvent} from "../../../store/vaultReducer";
+import {getParagraphs} from "../../../core/getParagraphs";
+import {useProfile} from "../../../hooks/useProfile";
 
 const NoteFormV2 = ({address, formNote, remove}) => {
     const dispatch = useDispatch();
     const paragraphs = getParagraphs(formNote);
-    const colors = ['white', '#F59475', '#F9C975', '#E4F693', '#B388F9', '#13E8FB', 'white'];
+    const nowUser = useProfile();
+    const colors = ['white', '#F59475', '#F9C975', '#E4F693', '#B388F9', '#13E8FB'];
 
     const defineColor = (note) => {
         return note.color
@@ -21,12 +23,12 @@ const NoteFormV2 = ({address, formNote, remove}) => {
 
     const chooseColor = (color) => {
         console.log("Choose color");
-        dispatch(updateNoteEvent({...formNote, updatedData: {color}, ...address}));
+        dispatch(updateNoteEvent({...formNote, updatedData: {color}, ...address, nowUser}));
     }
 
-    const setName = (name) => {
-        console.log("Set name");
-        dispatch(updateNoteEvent({...formNote, updatedData: {name}, ...address}));
+    const setTitle = (title) => {
+        console.log("Set title");
+        dispatch(updateNoteEvent({...formNote, updatedData: {title}, ...address, nowUser}));
     }
 
     return (
@@ -35,12 +37,12 @@ const NoteFormV2 = ({address, formNote, remove}) => {
             width: '700px',
             display: 'flex',
             flexDirection: 'column',
-            backgroundColor: defineColor(formNote),
+            backgroundColor: formNote.color,
             transition: '0.3s'
         }}>
             <Input placeholder="Заголовок"
-                   onChange={e => setName(e.target.value)}
-                   value={formNote.name}/>
+                   onChange={e => setTitle(e.target.value)}
+                   value={formNote.title}/>
             <Divider address={address} prev={null} next={formNote.head}/>
             {paragraphs.map(paragraph =>
                 <Paragraph
@@ -57,7 +59,7 @@ const NoteFormV2 = ({address, formNote, remove}) => {
                         <ColorBox chosen={formNote.color === color}
                                   key={id}
                                   color={color}
-                                  onClick={e => chooseColor(color)}
+                                  onClick={() => chooseColor(color)}
                         />)}
                 </div>
             </div>
