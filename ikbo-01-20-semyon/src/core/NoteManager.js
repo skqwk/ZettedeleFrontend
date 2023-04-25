@@ -1,4 +1,4 @@
-import {HLC} from "./HLC";
+import {HLC} from "./clock/HLC";
 import {ParagraphRGA} from "./ParagraphRGA";
 import {Mapper} from "./Mapper";
 import {isDir, isFile, readEventsFromFile} from "../utils/FileUtil";

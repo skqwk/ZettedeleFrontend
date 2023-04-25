@@ -24,7 +24,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts src/test",
     "eject": "react-scripts eject",
     "electron:serve": "concurrently -k \"cross-env BROWSER=none npm run start\" \"npm run electron:start\"",
     "electron:build": "",
@@ -53,6 +53,7 @@
     "cross-env": "^7.0.3",
     "electron": "^19.0.10",
     "electron-rebuild": "^3.2.9",
+    "supertest": "^6.3.3",
     "wait-on": "^7.0.1"
   }
 }
