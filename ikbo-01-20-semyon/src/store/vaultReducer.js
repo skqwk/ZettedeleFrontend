@@ -1,5 +1,5 @@
 import {NoteManager} from "../core/NoteManager";
-import {HLC} from "../core/HLC";
+import {HLC} from "../core/clock/HLC";
 import {VaultManager} from "../core/VaultManager";
 
 // Инициализируем стартовое состояние из NoteManager

@@ -1,4 +1,4 @@
-import {HLC} from "./HLC";
+import {HLC} from "./clock/HLC";
 import {toJson} from "../utils/JsonUtil";
 
 const fs = window.require('fs');
