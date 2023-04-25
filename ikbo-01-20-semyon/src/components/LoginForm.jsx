@@ -26,7 +26,7 @@ const LoginForm = ({close}) => {
             <Input inputName="ЛОГИН" value={form.login} onChange={e => setForm({...form, login: e.target.value})}/>
             <Input inputName="ПАРОЛЬ" type={'password'} value={form.password}
                    onChange={e => setForm({...form, password: e.target.value})}/>
-            <Button onClick={e => sendLoginRequest()}>ВОЙТИ</Button>
+            <Button onClick={() => sendLoginRequest()}>ВОЙТИ</Button>
         </div>
     );
 };

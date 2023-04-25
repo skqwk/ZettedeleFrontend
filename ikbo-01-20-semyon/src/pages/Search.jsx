@@ -24,7 +24,7 @@ const Search = () => {
         console.log(`Current mode is ${offline ? 'offline' : 'online'}`)
     }, [])
 
-    const search = (e) => {
+    const search = () => {
         console.log("Search!")
         setToggle(!toggle);
     }
@@ -53,7 +53,7 @@ const Search = () => {
             <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '30px'}}>
                 <SearchBar query={query} setQuery={setQuery}/>
                 <Select value={selectedValue} onChange={setSelectedValue} options={options} defaultValue="Что искать?"/>
-                <RoundButton onClick={e => search(e)} disabled={offline}><span role="img"
+                <RoundButton onClick={() => search()} disabled={offline}><span role="img"
                                                                                aria-label="loupe">🔍</span>︎</RoundButton>
             </div>
             {offline

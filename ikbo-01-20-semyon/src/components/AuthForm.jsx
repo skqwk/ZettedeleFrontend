@@ -35,8 +35,8 @@ const AuthForm = () => {
             </Modal>
 
             {offline && <Hint>Восстановите подключение к сети, чтобы иметь возможность авторизоваться</Hint>}
-            <Button onClick={e => login()} disabled={offline}>АВТОРИЗОВАТЬСЯ</Button>
-            <Button onClick={e => register()} disabled={offline}>ЗАРЕГИСТРИРОВАТЬСЯ</Button>
+            <Button onClick={() => login()} disabled={offline}>АВТОРИЗОВАТЬСЯ</Button>
+            <Button onClick={() => register()} disabled={offline}>ЗАРЕГИСТРИРОВАТЬСЯ</Button>
         </div>
     );
 };

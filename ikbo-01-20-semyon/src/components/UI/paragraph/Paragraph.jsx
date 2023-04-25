@@ -37,7 +37,7 @@ const Paragraph = ({paragraph, address, ...props}) => {
 
             </textarea>
             <Sidebar>
-                <SidebarButton onClick={e => remove()}/>
+                <SidebarButton onClick={() => remove()}/>
             </Sidebar>
             <Divider address={address} prev={paragraph.id} next={paragraph.next}/>
         </div>

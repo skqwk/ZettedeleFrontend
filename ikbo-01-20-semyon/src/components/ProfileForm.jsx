@@ -29,7 +29,7 @@ const ProfileForm = () => {
         <div style={{width: "100%", alignItems: 'center', display: 'flex', flexDirection: 'column'}}>
             <Input inputName="ЛОГИН" readOnly value={profile.login}/>
             <Input inputName="ПОСЛЕДНЯЯ АВТОРИЗАЦИЯ" readOnly value={profile.lastAuth}/>
-            <Button onClick={e => logout()}>ВЫЙТИ</Button>
+            <Button onClick={() => logout()}>ВЫЙТИ</Button>
         </div>
     );
 };
