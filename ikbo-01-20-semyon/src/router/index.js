@@ -1,5 +1,4 @@
 import Profile from "../pages/Profile";
-import Vaults from "../pages/Vaults";
 import Search from "../pages/Search";
 import About from "../pages/About";
 import Notes from "../pages/Notes";

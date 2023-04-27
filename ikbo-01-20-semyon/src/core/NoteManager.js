@@ -5,13 +5,10 @@ import {isDir, isFile, readEventsFromFile} from "../utils/FileUtil";
 import {toJson} from "../utils/JsonUtil";
 import {VAULT_STATE_FILE} from "./VaultManager";
 import {VaultRFA} from "./VaultRFA";
+import {DATA_PATH} from "./config/index";
 
 const fs = window.require('fs');
 const {join} = window.require('path');
-const {app} = window.require('@electron/remote');
-
-const appPath = app.getAppPath();
-const dataPath = join(appPath, 'data', 'users');
 
 export class NoteManager {
     static emptyUpdateEvents = {
@@ -33,7 +30,7 @@ export class NoteManager {
         console.log(payload);
         let nowUser = payload.nowUser;
 
-        let vaultPath = join(dataPath, nowUser, payload.vaultId);
+        let vaultPath = join(DATA_PATH, nowUser, payload.vaultId);
         let notePath = join(vaultPath, payload.noteId);
 
         let id = payload.noteId;
@@ -50,7 +47,7 @@ export class NoteManager {
         console.log(payload);
         let nowUser = payload.nowUser;
 
-        let vaultPath = join(dataPath, nowUser, payload.vaultId);
+        let vaultPath = join(DATA_PATH, nowUser, payload.vaultId);
         let notePath = join(vaultPath, payload.noteId);
 
         let id = payload.noteId;
@@ -112,7 +109,7 @@ export class NoteManager {
         console.log('UPDATE NOTE IN NOTE MANAGER');
         let nowUser = payload.nowUser;
 
-        let vaultPath = join(dataPath, nowUser, payload.vaultId);
+        let vaultPath = join(DATA_PATH, nowUser, payload.vaultId);
         let notePath = join(vaultPath, payload.noteId);
 
         let eventPayload = this.createPayloadDependsOnEvent(payload.event, payload.body);
@@ -167,7 +164,7 @@ export class NoteManager {
     static loadNotesInMemory(nowUser) {
         console.log(`Now user = ${nowUser}`);
 
-        let userDataPath = join(dataPath, nowUser);
+        let userDataPath = join(DATA_PATH, nowUser);
         console.log(userDataPath);
         let vaults = fs.readdirSync(userDataPath)
             .filter(file => isDir(join(userDataPath, file)))

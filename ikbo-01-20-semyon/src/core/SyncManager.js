@@ -2,14 +2,14 @@ import {v4} from 'uuid';
 import {HLC} from "./clock/HLC";
 import {SyncService} from "../API/SyncService";
 import {VectorVersionCalculator} from "./VectorVersionCalculator";
+import {DATA_PATH} from "./config";
+import {loadAllEvents} from "../utils/FileUtil";
+import {HybridTimestamp} from "./clock/HybridTimestamp";
+import {EventFinder} from "./EventFinder";
+import {EventApplier} from "./EventApplier";
 
 const fs = window.require('fs');
 const {join} = window.require('path');
-const {app} = window.require('@electron/remote');
-
-
-const appPath = app.getAppPath();
-const dataPath = join(appPath, 'data', 'users');
 
 const CONFIG_FILE_NAME = 'config.json';
 const VECTOR_VERSION_FILE_NAME = 'vector-version.json';
@@ -22,7 +22,7 @@ export class SyncManager {
     static init(nowUser) {
         this.nowUser = nowUser;
         let config = {};
-        let configPath = join(dataPath, nowUser, CONFIG_FILE_NAME);
+        let configPath = join(DATA_PATH, nowUser, CONFIG_FILE_NAME);
         if (fs.existsSync(configPath)) {
             let buffer = fs.readFileSync(configPath);
             config = JSON.parse(buffer);
@@ -54,16 +54,16 @@ export class SyncManager {
                 // Применяем изменения полученные с сервера
                 let serverEvents = rs.data.events;
                 this.applyServerEvents(serverEvents)
-                
+
                 // Обновляем вектор версий
                 let mergedVector = this.mergeVectorVersion(vectorVersion, serverVectorVersion);
-                let vectorVersionPath = join(dataPath, this.nowUser, VECTOR_VERSION_FILE_NAME);
+                let vectorVersionPath = join(DATA_PATH, this.nowUser, VECTOR_VERSION_FILE_NAME);
                 this.writeFile(vectorVersionPath, mergedVector);
             })
     }
 
     static loadVectorVersion() {
-        let vectorVersionPath = join(dataPath, this.nowUser, VECTOR_VERSION_FILE_NAME);
+        let vectorVersionPath = join(DATA_PATH, this.nowUser, VECTOR_VERSION_FILE_NAME);
         let vectorVersion = {};
         if (fs.existsSync(vectorVersionPath)) {
             let buffer = fs.readFileSync(vectorVersionPath);
@@ -81,11 +81,21 @@ export class SyncManager {
     }
 
     static loadMissingEvents(diffVectorVersion) {
-        
+        let allEvents = loadAllEvents(this.nowUser);
+        return Object.values(diffVectorVersion)
+            .map(timestamp => EventFinder.findAllNodeEventsLaterThan(timestamp, allEvents));
     }
 
-    static applyServerEvents(serverEvents) {
 
+    static applyServerEvents(serverEvents) {
+        serverEvents
+            .sort((e1, e2) => e1.happenAt.localeCompare(e2.happenAt))
+            .forEach(e => {
+                let remoteTimestamp = HybridTimestamp.parse(e.happenAt);
+                HLC.singleton.tick(remoteTimestamp);
+                EventApplier.apply(e, this.nowUser);
+            }
+        )
     }
 
     static mergeVectorVersion(vectorVersion, serverVectorVersion) {

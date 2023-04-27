@@ -80,4 +80,24 @@ describe("HybridTimestamp", () => {
         expect(t2.toString()).toBe('2023-04-25T19:10:07.914Z-0004-node1');
     })
 
+    test("должен сравниваться лексикографически, также как и логически",() => {
+        let t0 = "2023-04-25T10:10:07.914Z-0002-node1";
+        let t1 = "2023-04-25T19:10:07.914Z-0002-node1";
+        let t2 = "2023-04-25T19:10:07.914Z-0002-node1";
+        let t3 = "2023-04-25T19:10:07.914Z-0002-node2";
+        let t4 = "2023-04-25T19:15:07.914Z-0002-node1";
+
+        let ht0 = HybridTimestamp.parse(t0);
+        let ht1 = HybridTimestamp.parse(t1);
+        let ht2 = HybridTimestamp.parse(t2);
+        let ht3 = HybridTimestamp.parse(t3);
+        let ht4 = HybridTimestamp.parse(t4);
+
+        expect(ht0.compareTo(ht1)).toBe(t0.localeCompare(t1));
+        expect(ht2.compareTo(ht1)).toBe(t2.localeCompare(t1));
+        expect(ht2.compareTo(ht3)).toBe(t2.localeCompare(t3));
+        expect(ht3.compareTo(ht4)).toBe(t3.localeCompare(t4));
+
+    })
+
 })

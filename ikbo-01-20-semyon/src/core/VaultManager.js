@@ -1,18 +1,15 @@
 import {HLC} from "./clock/HLC";
 import {toJson} from "../utils/JsonUtil";
+import {DATA_PATH} from "./config/index";
 
 const fs = window.require('fs');
 const {join} = window.require('path');
-const {app} = window.require('@electron/remote');
-
-const appPath = app.getAppPath();
-const dataPath = join(appPath, 'data', 'users');
 
 export const VAULT_STATE_FILE = 'vault.state';
 
 export class VaultManager {
     static createVault(payload) {
-        let vaultPath = join(dataPath, payload.nowUser, payload.vaultId);
+        let vaultPath = join(DATA_PATH, payload.nowUser, payload.vaultId);
         let vaultPathState = this.getVaultPathState(payload);
 
         let createVaultMessage = {
@@ -47,6 +44,7 @@ export class VaultManager {
         let updateVaultMessage = {
             event: 'UPDATE_VAULT',
             happenAt: HLC.timestamp(),
+            id: payload.vaultId,
             payload: payload.body
         }
 
@@ -55,7 +53,7 @@ export class VaultManager {
 
     static getVaultPathState(payload) {
         let nowUser = payload.nowUser;
-        let vaultPath = join(dataPath, nowUser, payload.vaultId)
+        let vaultPath = join(DATA_PATH, nowUser, payload.vaultId)
         return join(vaultPath, VAULT_STATE_FILE);
     }
 }

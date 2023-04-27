@@ -3,8 +3,6 @@ import {getParagraphs} from "../../../core/getParagraphs";
 
 const NoteCardV2 = ({note, remove, ...props}) => {
 
-    const colors = ['#F59475', '#F9C975', '#E4F693', '#B388F9', '#13E8FB'];
-
     const content = getParagraphs(note)
         .map(paragraph => paragraph.content)
         .join(" ")

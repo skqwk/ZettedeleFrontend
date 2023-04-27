@@ -1,22 +1,18 @@
 import {HybridTimestamp} from "./HybridTimestamp";
+import {DATA_PATH} from "../config/index";
 
 const fs = window.require('fs');
 const {join} = window.require('path');
-const {app} = window.require('@electron/remote');
-
-
-const appPath = app.getAppPath();
-const dataPath = join(appPath, 'data', 'users');
 
 const HLC_FILE_NAME = 'hlc.json';
 
 export class HLC {
-    static HLC;
+    static singleton;
     static nowUser;
 
     static init(nowUser, nodeId) {
         this.nowUser = nowUser;
-        let hlcPath = join(dataPath, nowUser, HLC_FILE_NAME);
+        let hlcPath = join(DATA_PATH, nowUser, HLC_FILE_NAME);
         let hlc = {};
         if (fs.existsSync(hlcPath)) {
             let buffer = fs.readFileSync(hlcPath);
@@ -34,7 +30,7 @@ export class HLC {
         }
 
         let hybridTimestamp = HybridTimestamp.parse(hlc.latestTimestamp);
-        this.HLC = new HLC(hybridTimestamp.wallClockTime, nodeId);
+        this.singleton = new HLC(hybridTimestamp.wallClockTime, nodeId);
         this.writeToFile(hlc.latestTimestamp);
         console.log(hlc);
     }
@@ -46,13 +42,13 @@ export class HLC {
     }
 
     static timestamp() {
-        let timestamp = this.HLC.now().toString();
+        let timestamp = this.singleton.now().toString();
         this.writeToFile(timestamp);
         return timestamp;
     }
 
     static writeToFile(timestamp) {
-        let hlcPath = join(dataPath, this.nowUser, HLC_FILE_NAME);
+        let hlcPath = join(DATA_PATH, this.nowUser, HLC_FILE_NAME);
         let hlc = {latestTimestamp: timestamp};
         fs.writeFileSync(hlcPath, JSON.stringify(hlc, null, 2));
     }
