@@ -34,6 +34,7 @@ export class VaultManager {
         let removeVaultMessage = {
             event: 'REMOVE_VAULT',
             happenAt: HLC.timestamp(),
+            id: payload.vaultId,
             payload: {}
         }
 

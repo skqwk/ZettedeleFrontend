@@ -134,13 +134,14 @@ export class NoteManager {
                 event: 'UPDATE_NOTE',
                 happenAt,
                 parentId: payload.vaultId,
+                id: payload.noteId,
                 payload: {[field]: value}
             }
         } else {
             this.updateEvents.UPDATE_NOTE[payload.event][payload.body.id] = {
-                parentId: payload.noteId,
                 event: payload.event,
                 happenAt,
+                parentId: payload.noteId,
                 payload: eventPayload
             }
         }

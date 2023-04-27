@@ -6,7 +6,7 @@ import Notes from "../pages/Notes";
 
 export const routes = [
     {name: "Профиль", to: "/profile", element: Profile},
-    {name: "Хранилища", to: "/vaults", element: Vaults},
+    // {name: "Хранилища", to: "/vaults", element: Vaults},
     {name: "Поиск", to: "/search", element: Search},
     // {name: "Настройки", to: "/setup", element: Setup},
     {name: "Заметки", to: "/notes", element: Notes},

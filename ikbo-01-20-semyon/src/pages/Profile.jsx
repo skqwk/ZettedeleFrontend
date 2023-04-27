@@ -9,7 +9,7 @@ import AuthForm from "../components/AuthForm";
 import ProfileForm from "../components/ProfileForm";
 import Input from "../components/UI/input/Input";
 import {useProfile} from "../hooks/useProfile";
-import {checkoutProfileAction} from "../store/profileReducer";
+import {checkoutProfileAction, resetProfileAction} from "../store/profileReducer";
 
 const Profile = () => {
     const dispatch = useDispatch();
@@ -31,7 +31,7 @@ const Profile = () => {
     }
 
     const resetProfile = () => {
-        dispatch(checkoutProfileAction({name: null}));
+        dispatch(resetProfileAction());
     }
 
     return (

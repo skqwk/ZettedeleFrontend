@@ -1,8 +1,64 @@
 import {HybridTimestamp} from "./HybridTimestamp";
 
+const fs = window.require('fs');
+const {join} = window.require('path');
+const {app} = window.require('@electron/remote');
+
+
+const appPath = app.getAppPath();
+const dataPath = join(appPath, 'data', 'users');
+
+const HLC_FILE_NAME = 'hlc.json';
+
 export class HLC {
+    static HLC;
+    static nowUser;
+
+    static init(nowUser, nodeId) {
+        this.nowUser = nowUser;
+        let hlcPath = join(dataPath, nowUser, HLC_FILE_NAME);
+        let hlc = {};
+        if (fs.existsSync(hlcPath)) {
+            let buffer = fs.readFileSync(hlcPath);
+            hlc = JSON.parse(buffer);
+            if (!hlc.latestTimestamp) {
+                this.initHLCConfig(hlc, nodeId);
+            } else {
+                let hybridTimestamp = HybridTimestamp.parse(hlc.latestTimestamp);
+                if (nodeId !== hybridTimestamp.nodeId) {
+                    throw new Error(`$Сохраненный id узла = ${hybridTimestamp.nodeId} не совпал с инициализированным ${nodeId}`);
+                }
+            }
+        } else {
+            this.initHLCConfig(hlc, nodeId);
+        }
+
+        let hybridTimestamp = HybridTimestamp.parse(hlc.latestTimestamp);
+        this.HLC = new HLC(hybridTimestamp.wallClockTime, nodeId);
+        this.writeToFile(hlc.latestTimestamp);
+        console.log(hlc);
+    }
+
+    static initHLCConfig(hlc, nodeId) {
+        let currentTimeMillis = new Date().getTime();
+        let hybridTimestamp = new HybridTimestamp(currentTimeMillis, 0, nodeId);
+        hlc.latestTimestamp = hybridTimestamp.toString();
+    }
+
+    static timestamp() {
+        let timestamp = this.HLC.now().toString();
+        this.writeToFile(timestamp);
+        return timestamp;
+    }
+
+    static writeToFile(timestamp) {
+        let hlcPath = join(dataPath, this.nowUser, HLC_FILE_NAME);
+        let hlc = {latestTimestamp: timestamp};
+        fs.writeFileSync(hlcPath, JSON.stringify(hlc, null, 2));
+    }
+
     latestTime;
-    nodeId
+    nodeId;
 
     constructor(currentTimeMillis, nodeId) {
         this.latestTime = new HybridTimestamp(currentTimeMillis, 0, nodeId);
@@ -23,9 +79,9 @@ export class HLC {
         if (this.latestTime.wallClockTime >= currentTimeMillis) {
             this.latestTime = this.latestTime.addTicks(1);
         } else {
-            this.latestTime = new HybridTimestamp(currentTimeMillis, 0, nodeId);
+            this.latestTime = new HybridTimestamp(currentTimeMillis, 0, this.nodeId);
         }
-        return this.latestTime.now();
+        return this.latestTime;
     }
 
     /**
@@ -53,9 +109,5 @@ export class HLC {
     max() {
         let args = Array.from(arguments);
         return args.reduce((t1, t2) => t1.happenedBefore(t2) ? t2 : t1);
-    }
-
-    static timestamp() {
-        return new Date().toISOString();
     }
 }
