@@ -11,7 +11,6 @@ export class EventApplier {
     static apply(event, nowUser) {
         let eventType = event.event;
         let userDataPath = join(DATA_PATH, nowUser);
-
         if (eventType.includes("_PARAGRAPH")) {
             this.applyParagraphEvent(event, nowUser);
         } else {

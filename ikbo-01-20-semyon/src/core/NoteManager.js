@@ -64,7 +64,7 @@ export class NoteManager {
 
         let id = payload.noteId;
         let removeNoteMessage =
-            {event: 'REMOVE_NOTE', happenAt: HLC.timestamp(), parentId: payload.vaultId, payload: {}}
+            {event: 'REMOVE_NOTE', happenAt: HLC.timestamp(), parentId: payload.vaultId, id, payload: {}}
 
         this.updateEvents.NOTE_PATH = notePath;
         this.updateEvents.REMOVE_NOTE[id] = removeNoteMessage;
@@ -107,11 +107,8 @@ export class NoteManager {
 
             // Если была удалена - можно опустить все обновления
             // и записать только информацию об удалении
-            fs.appendFileSync(notePath, toJson({
-                event: 'REMOVE_NOTE',
-                happenAt: HLC.timestamp(),
-                payload: {}
-            }));
+
+            fs.appendFileSync(notePath, toJson(this.updateEvents.REMOVE_NOTE[noteId]));
         }
         console.log(this.updateEvents);
         this.clearUpdateEvents();
