@@ -10,11 +10,13 @@ import ProfileForm from "../components/ProfileForm";
 import Input from "../components/UI/input/Input";
 import {useProfile} from "../hooks/useProfile";
 import {resetProfileAction} from "../store/profileReducer";
+import {SyncManager} from "../core/SyncManager";
 
 const Profile = () => {
     const dispatch = useDispatch();
     const offline = useSelector(state => state.connection.offline);
     const isAuth = useSelector(state => state.auth.isAuth);
+    const authToken = useSelector(state => state.auth.authToken);
     const nowProfile = useProfile();
 
     const toggle = (e) => {
@@ -27,7 +29,7 @@ const Profile = () => {
     }
 
     const syncNotes = () => {
-        console.log('Sync notes');
+        SyncManager.sync(authToken);
     }
 
     const resetProfile = () => {

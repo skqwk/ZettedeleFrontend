@@ -98,8 +98,8 @@ export class HLC {
         // [3] - Временная метка данного клиента
         this.latestTime = this.max(now, remoteTimestamp, this.latestTime);
         this.latestTime = this.latestTime.addTicks(1);
-
-        return this.latestTime.now();
+        console.log(this.latestTime);
+        return this.latestTime;
     }
 
     max() {

@@ -7,6 +7,7 @@ import Input from "../../UI/input/Input";
 import Button from "../../UI/button/Button";
 import {diff} from "../../../utils/DiffUtil";
 import Hint from "../../UI/hint/Hint";
+import {isBlank} from "../../../utils/ValidationUtil";
 
 const EditVaultForm = ({vault, visible, setVisible, setVaultId}) => {
     const dispatch = useDispatch();
@@ -34,9 +35,6 @@ const EditVaultForm = ({vault, visible, setVisible, setVaultId}) => {
         dispatch(removeVaultEvent({vaultId: vault.id, nowUser}));
     }
 
-    const isBlank = (str) => {
-        return !/\S/.test(str)
-    }
 
     return (
         <div>

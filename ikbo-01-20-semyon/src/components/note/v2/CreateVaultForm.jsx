@@ -6,6 +6,7 @@ import {useDispatch} from "react-redux";
 import {useProfile} from "../../../hooks/useProfile";
 import {createVaultEvent} from "../../../store/vaultReducer";
 import {v4} from 'uuid';
+import {isBlank} from "../../../utils/ValidationUtil";
 
 const CreateVaultForm = ({visible, setVisible}) => {
     const dispatch = useDispatch();
@@ -22,9 +23,7 @@ const CreateVaultForm = ({visible, setVisible}) => {
         setVisible(false);
     }
 
-    const isBlank = (str) => {
-        return !/\S/.test(str)
-    }
+
 
     return (
         <div>

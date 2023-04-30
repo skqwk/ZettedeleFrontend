@@ -34,31 +34,42 @@ export class SyncManager {
             config = {nodeId: v4()};
             this.writeFile(configPath, config);
         }
-        this.nodeId = config;
+        this.nodeId = config.nodeId;
         return config;
     }
 
     static sync(authToken) {
+        console.log(`Start sync with token = ${authToken}`);
         let vectorVersion = this.loadVectorVersion();
         SyncService.getEvents(vectorVersion, authToken)
             .then(rs => {
-                // Вычисляем чего не хватает на сервере и отправляем
-                let serverVectorVersion = rs.data.vectorVersion;
-                let diff = this.calculateDiff(vectorVersion, serverVectorVersion);
-                let missingEvents = this.loadMissingEvents(diff);
-                SyncService.sendEvents(missingEvents)
-                    .then(rs => {
-                        console.log(rs);
-                    });
+                if (rs.status === 200) {
+                    // Вычисляем чего не хватает на сервере и отправляем
+                    let serverVectorVersion = rs.data.vectorVersion;
+                    let diff = this.calculateDiff(vectorVersion, serverVectorVersion);
+                    let missingEvents = this.loadMissingEvents(diff);
+                    console.log(`SEND ${missingEvents.length} EVENTS`);
+                    SyncService.sendEvents(missingEvents, authToken)
+                        .then(rs => {
+                            console.log(rs);
+                        })
+                        .catch(err => console.log(err));
 
-                // Применяем изменения полученные с сервера
-                let serverEvents = rs.data.events;
-                this.applyServerEvents(serverEvents)
 
-                // Обновляем вектор версий
-                let mergedVector = this.mergeVectorVersion(vectorVersion, serverVectorVersion);
-                let vectorVersionPath = join(DATA_PATH, this.nowUser, VECTOR_VERSION_FILE_NAME);
-                this.writeFile(vectorVersionPath, mergedVector);
+                    // Применяем изменения полученные с сервера
+                    console.log(rs.data);
+                    let serverEvents = rs.data.events;
+                    console.log(`GET ${serverEvents.length} EVENTS`);
+                    this.applyServerEvents(serverEvents)
+
+                    // Обновляем вектор версий
+                    let mergedVector = this.mergeVectorVersion(vectorVersion, serverVectorVersion);
+                    let vectorVersionPath = join(DATA_PATH, this.nowUser, VECTOR_VERSION_FILE_NAME);
+                    this.writeFile(vectorVersionPath, mergedVector);
+                }
+            })
+            .catch(err => {
+                console.log(err);
             })
     }
 
@@ -83,7 +94,8 @@ export class SyncManager {
     static loadMissingEvents(diffVectorVersion) {
         let allEvents = loadAllEvents(this.nowUser);
         return Object.values(diffVectorVersion)
-            .map(timestamp => EventFinder.findAllNodeEventsLaterThan(timestamp, allEvents));
+            .map(timestamp => EventFinder.findAllNodeEventsLaterThan(timestamp, allEvents))
+            .flat();
     }
 
 
@@ -91,11 +103,11 @@ export class SyncManager {
         serverEvents
             .sort((e1, e2) => e1.happenAt.localeCompare(e2.happenAt))
             .forEach(e => {
-                let remoteTimestamp = HybridTimestamp.parse(e.happenAt);
-                HLC.singleton.tick(remoteTimestamp);
-                EventApplier.apply(e, this.nowUser);
-            }
-        )
+                    let remoteTimestamp = HybridTimestamp.parse(e.happenAt);
+                    HLC.singleton.tick(remoteTimestamp);
+                    EventApplier.apply(e, this.nowUser);
+                }
+            )
     }
 
     static mergeVectorVersion(vectorVersion, serverVectorVersion) {

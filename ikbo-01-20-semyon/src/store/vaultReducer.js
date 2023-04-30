@@ -59,7 +59,6 @@ const CREATE_VAULT = 'CREATE_VAULT';
 const UPDATE_VAULT = 'UPDATE_VAULT';
 const REMOVE_VAULT = 'REMOVE_VAULT';
 
-const SAVE_NOTE = 'SAVE_NOTE';
 const CREATE_NOTE = 'CREATE_NOTE';
 const REMOVE_NOTE = 'REMOVE_NOTE';
 const UPDATE_NOTE = 'UPDATE_NOTE';
@@ -75,7 +74,6 @@ export const createVaultEvent = (payload) => ({type: CREATE_VAULT, payload})
 export const updateVaultEvent = (payload) => ({type: UPDATE_VAULT, payload})
 export const removeVaultEvent = (payload) => ({type: REMOVE_VAULT, payload})
 
-export const saveNoteEvent = () => ({type: SAVE_NOTE})
 export const createNoteEvent = (payload) => ({type: CREATE_NOTE, payload})
 export const updateNoteEvent = (payload) => ({type: UPDATE_NOTE, payload})
 export const removeNoteEvent = (payload) => ({type: REMOVE_NOTE, payload})

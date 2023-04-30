@@ -2,6 +2,7 @@ import {NoteFinder} from "./NoteFinder";
 import {DATA_PATH} from "./config";
 import {VAULT_STATE_FILE} from "./VaultManager";
 import {toJson} from "../utils/JsonUtil";
+import {containsKey} from "../utils/DiffUtil";
 
 const fs = window.require('fs');
 const {join} = window.require('path');
@@ -37,12 +38,16 @@ export class EventApplier {
     }
 
     static applyCreateEvent(event, nowUser) {
-        let path = join(DATA_PATH, nowUser);
-        if ('parentId' in event) {
+        let basePath = join(DATA_PATH, nowUser);
+        let path = basePath;
+        console.log(event);
+        console.log(path);
+        if (containsKey('parentId', event)) {
             let vaultId = event.parentId;
-            path = join(path, vaultId, event.payload.id);
+            path = join(basePath, vaultId, event.payload.id);
         } else {
-            path = join(path, event.payload.id, VAULT_STATE_FILE);
+            fs.mkdirSync(join(basePath, event.payload.id));
+            path = join(basePath, event.payload.id, VAULT_STATE_FILE);
         }
         fs.writeFileSync(path, toJson(event));
     }

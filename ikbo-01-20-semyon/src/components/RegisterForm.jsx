@@ -1,9 +1,25 @@
 import React, {useState} from 'react';
 import Input from "./UI/input/Input";
 import Button from "./UI/button/Button";
+import AuthService from "../API/AuthService";
+import {isBlank} from "../utils/ValidationUtil";
 
-const RegisterForm = () => {
+const RegisterForm = ({close}) => {
     const [form, setForm] = useState({login: '', password: '', repeatedPassword: ''});
+
+    const register = () => {
+        AuthService.register(form.login, form.password)
+            .then(rs => {
+                console.log(rs);
+            });
+        close();
+    }
+
+    const isNotValid = () => {
+        return isBlank(form.login)
+            && isBlank(form.password)
+            && isBlank(form.repeatedPassword);
+    }
 
     return (
         <div style={{display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
@@ -12,7 +28,7 @@ const RegisterForm = () => {
                    onChange={e => setForm({...form, password: e.target.value})}/>
             <Input inputName="ПОВТОРИТЕ ПАРОЛЬ" type={'password'} value={form.repeatedPassword}
                    onChange={e => setForm({...form, repeatedPassword: e.target.value})}/>
-            <Button>ЗАРЕГИСТРИРОВАТЬСЯ</Button>
+            <Button onClick={register} disabled={isNotValid()}>ЗАРЕГИСТРИРОВАТЬСЯ</Button>
         </div>
     );
 };

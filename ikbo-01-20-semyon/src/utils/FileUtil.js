@@ -29,20 +29,20 @@ export const loadAllEvents = (nowUser) => {
         .map(file => join(userDataPath, file))
         .filter(path => isDir(path))
         .map(vaultPath => readEventsFromVault(vaultPath))
+        .flat()
 
     console.log(allEvents);
     return allEvents;
 }
 
 export const readEventsFromVault = (vaultPath) => {
-    let vaultEvents = readEventsFromFile(join(vaultPath, VAULT_STATE_FILE));
-
     let noteEvents = fs.readdirSync(vaultPath)
         .map(file => join(vaultPath, file))
         .filter(path => isFile(path))
-        .map(filePath => readEventsFromFile(filePath));
+        .map(filePath => readEventsFromFile(filePath))
+        .flat();
 
-    return vaultEvents.concat(noteEvents);
+    return noteEvents;
 }
 
 export const isDirContainsFile = (dirPath, file) => {

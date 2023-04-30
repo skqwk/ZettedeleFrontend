@@ -5,8 +5,10 @@ export class SyncService {
     static API = 'http://localhost:8080';
 
     static async getEvents(vectorVersion, authToken) {
+        console.log(vectorVersion);
+
         const rs = await axios.post(`${this.API}/sync`, {
-            vectorVersion
+            ...vectorVersion
         }, {
             headers: {
                 'Authorization': authToken,
@@ -18,9 +20,7 @@ export class SyncService {
     }
 
     static async sendEvents(events, authToken) {
-        const rs = await axios.post(`${this.API}/share`, {
-            events
-        }, {
+        const rs = await axios.post(`${this.API}/share`, events, {
             headers: {
                 'Authorization': authToken,
                 'Access-Control-Allow-Origin': '*'

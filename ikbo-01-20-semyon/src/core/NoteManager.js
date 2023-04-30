@@ -11,7 +11,7 @@ const fs = window.require('fs');
 const {join} = window.require('path');
 
 export class NoteManager {
-    static emptyUpdateEvents = {
+    static updateEvents = {
         NOTE_PATH: '',
         CREATE_NOTE: {},
         UPDATE_NOTE: {
@@ -23,7 +23,19 @@ export class NoteManager {
         REMOVE_NOTE: {},
     };
 
-    static updateEvents = this.emptyUpdateEvents;
+    static clearUpdateEvents = () => {
+        this.updateEvents = {
+            NOTE_PATH: '',
+            CREATE_NOTE: {},
+            UPDATE_NOTE: {
+                UPDATE_FIELDS: {},
+                CREATE_PARAGRAPH: {},
+                REMOVE_PARAGRAPH: {},
+                UPDATE_PARAGRAPH: {}
+            },
+            REMOVE_NOTE: {},
+        };
+    }
 
     static createNote(payload) {
         console.log('CREATE NOTE');
@@ -37,7 +49,7 @@ export class NoteManager {
         let createdAt = new Date().toLocaleDateString();
         let createNoteMessage =
             {event: 'CREATE_NOTE', happenAt: HLC.timestamp(), parentId: payload.vaultId, payload: {id, createdAt}}
-        this.updateEvents = {...this.emptyUpdateEvents};
+        this.clearUpdateEvents();
         this.updateEvents.NOTE_PATH = notePath;
         this.updateEvents.CREATE_NOTE[id] = createNoteMessage;
     }
@@ -60,7 +72,8 @@ export class NoteManager {
 
     static flushUpdates(noteId) {
         let notePath = this.updateEvents.NOTE_PATH;
-
+        console.log(notePath);
+        console.log(this.updateEvents);
         // Если заметка не удалялась
         if (Object.keys(this.updateEvents.REMOVE_NOTE).length === 0) {
             // Если заметка создана впервые - создаем файл
@@ -100,7 +113,9 @@ export class NoteManager {
                 payload: {}
             }));
         }
-        this.updateEvents = {...this.emptyUpdateEvents};
+        console.log(this.updateEvents);
+        this.clearUpdateEvents();
+        console.log(this.updateEvents);
     }
 
     static extractValueByKey = (events) => Object.keys(events).map(key => events[key]);

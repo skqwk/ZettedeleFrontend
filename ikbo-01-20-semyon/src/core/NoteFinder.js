@@ -9,7 +9,7 @@ export class NoteFinder {
         let userDataPath = join(DATA_PATH, nowUser);
         let dir = fs.readdirSync(userDataPath)
             .filter(name => isDir(join(userDataPath, name)))
-            .find(dir => isDirContainsFile(join(userDataPath, nowUser), noteId));
+            .find(dir => isDirContainsFile(join(userDataPath, dir), noteId));
 
         return join(userDataPath, dir, noteId);
     }

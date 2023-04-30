@@ -7,3 +7,9 @@ export const diff = (o1, o2) => {
         }
     }, {})
 }
+
+export const containsKey = (key, object) => {
+    return (key in object)
+        && (object[key] !== null)
+        && (object[key] !== undefined);
+}
