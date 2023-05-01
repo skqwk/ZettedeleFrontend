@@ -54,7 +54,7 @@ const Notes = () => {
         <div>
 
             <CreateNoteForm vaultId={vaultId} isOpenCreateForm={isOpenCreateNoteForm}
-                            setOpenCreateForm={setOpenCreateNoteForm}/>
+                            setOpenCreateForm={setOpenCreateNoteForm} setNoteId={setNoteId}/>
             <EditNoteForm vaultId={vaultId} noteId={noteId} setNoteId={setNoteId}/>
 
             <CreateVaultForm visible={isOpenCreateVaultForm} setVisible={setOpenCreateVaultForm}/>

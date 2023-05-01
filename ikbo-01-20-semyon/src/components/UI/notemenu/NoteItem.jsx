@@ -1,10 +1,13 @@
 import React from 'react';
 import Sidebar from "../paragraph/sidebar/Sidebar";
 import SidebarButton from "../paragraph/sidebar/SidebarButton";
+import {NoteManager} from "../../../core/NoteManager";
 
-const NoteItem = ({link, remove}) => {
+const NoteItem = ({link, remove, setNoteId, parentNote}) => {
     const openLink = (noteId) => {
         console.log(`Open link note with id = ${noteId}`);
+        NoteManager.flushUpdates(parentNote);
+        setNoteId(noteId);
     }
 
     return (

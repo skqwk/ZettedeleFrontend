@@ -8,7 +8,7 @@ import {useNote} from "../../../hooks/useNote";
 import {NoteManager} from "../../../core/NoteManager";
 import {v4} from 'uuid';
 
-const CreateNoteForm = ({vaultId, isOpenCreateForm, setOpenCreateForm, ...props}) => {
+const CreateNoteForm = ({vaultId, isOpenCreateForm, setOpenCreateForm, setNoteId, ...props}) => {
     const dispatch = useDispatch();
     const [visible, setVisible] = useState(false);
     const nowUser = useProfile();
@@ -48,6 +48,7 @@ const CreateNoteForm = ({vaultId, isOpenCreateForm, setOpenCreateForm, ...props}
         <div>
             {visible && <Modal visible={visible} close={close} backgroundColor={note.color}>
                 <NoteFormV2
+                    setNoteId={setNoteId}
                     address={{vaultId, noteId: newNoteId}}
                     remove={remove}
                     visible={visible}

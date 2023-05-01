@@ -9,7 +9,7 @@ import {useProfile} from "../../../hooks/useProfile";
 import NoteFormLink from "./NoteFormLink";
 import NoteToolBar from "./NoteToolBar";
 
-const NoteFormV2 = ({address, formNote, remove}) => {
+const NoteFormV2 = ({address, formNote, remove, setNoteId}) => {
     const dispatch = useDispatch();
     const paragraphs = getParagraphs(formNote);
     const nowUser = useProfile();
@@ -54,7 +54,7 @@ const NoteFormV2 = ({address, formNote, remove}) => {
                     address={address}/>
             )
             }
-            <NoteFormLink links={formNote.links} address={address}/>
+            <NoteFormLink links={formNote.links} address={address} setNoteId={setNoteId}/>
             <NoteToolBar remove={remove} chooseColor={chooseColor} colors={colors} formNoteColor={formNote.color}/>
         </div>
     );

@@ -39,6 +39,7 @@ const EditNoteForm = ({vaultId, noteId, setNoteId, ...props}) => {
             {visible && <Modal visible={visible} close={close} backgroundColor={formNote.color}>
                 <NoteFormV2
                     address={{vaultId, noteId}}
+                    setNoteId={setNoteId}
                     remove={remove}
                     formNote={formNote}/>
             </Modal>

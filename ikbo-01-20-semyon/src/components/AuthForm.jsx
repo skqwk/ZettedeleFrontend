@@ -5,7 +5,6 @@ import Hint from "./UI/hint/Hint";
 import Modal from "./UI/modal/Modal";
 import RegisterForm from "./RegisterForm";
 import LoginForm from "./LoginForm";
-import AuthService from "../API/AuthService";
 
 const AuthForm = () => {
     const offline = useSelector(state => state.connection.offline);

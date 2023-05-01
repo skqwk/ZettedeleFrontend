@@ -2,7 +2,7 @@ import Profile from "../pages/Profile";
 import Search from "../pages/Search";
 import About from "../pages/About";
 import Notes from "../pages/Notes";
-import Test from "../pages/Test";
+import GraphView from "../pages/GraphView";
 
 export const routes = [
     {name: "Профиль", to: "/profile", element: Profile},
@@ -10,7 +10,8 @@ export const routes = [
     {name: "Поиск", to: "/search", element: Search},
     // {name: "Настройки", to: "/setup", element: Setup},
     {name: "Заметки", to: "/notes", element: Notes},
-    {name: "Тест", to: "/test", element: Test},
+    {name: "Граф", to: "/graph", element: GraphView},
+    // {name: "Тест", to: "/test", element: Test},
 ]
 
 export const excludedRoutes = [

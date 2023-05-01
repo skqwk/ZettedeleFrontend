@@ -5,14 +5,11 @@ import NoteMenu from "../../UI/notemenu/NoteMenu";
 import Modal from "../../UI/modal/Modal";
 import {useDispatch} from "react-redux";
 import {addNoteLinkEvent, removeNoteLinkEvent} from "../../../store/vaultReducer";
-import Sidebar from "../../UI/paragraph/sidebar/Sidebar";
-import SidebarButton from "../../UI/paragraph/sidebar/SidebarButton";
 import {useVault} from "../../../hooks/useVault";
-import {useNote} from "../../../hooks/useNote";
 import NoteItem from "../../UI/notemenu/NoteItem";
 import {useProfile} from "../../../hooks/useProfile";
 
-const NoteFormLink = ({links, address}) => {
+const NoteFormLink = ({links, address, setNoteId}) => {
     const [visibleNoteMenu, setVisibleNoteMenu] = useState(false);
     const [linkedNote, setLinkedNote] = useState(null);
     const dispatch = useDispatch();
@@ -42,7 +39,7 @@ const NoteFormLink = ({links, address}) => {
                 {
                     sharedLinks.map(
                         link =>
-                        <NoteItem link={link} remove={remove}/>
+                        <NoteItem link={link} remove={remove} setNoteId={setNoteId} parentNote={address.noteId}/>
                     )
                 }
             </div>

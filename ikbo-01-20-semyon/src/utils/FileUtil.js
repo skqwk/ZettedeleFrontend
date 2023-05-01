@@ -1,6 +1,5 @@
 import {fromJson} from "./JsonUtil";
 import {DATA_PATH} from "../core/config/index";
-import {VAULT_STATE_FILE} from "../core/VaultManager";
 
 const fs = window.require('fs');
 const {join} = window.require('path');
