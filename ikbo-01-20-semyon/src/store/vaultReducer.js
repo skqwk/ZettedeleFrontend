@@ -5,55 +5,8 @@ import {VaultManager} from "../core/VaultManager";
 // Инициализируем стартовое состояние из NoteManager
 // NoteManager.initState()
 const defaultState = {
-    vaults: [
-        {
-            id: 'work', name: 'work', notes: [
-                {
-                    id: 'note1', name: 'Новая заметка', head: '9101', paragraphs: {
-                        '1234': {id: '1234', content: '123', next: null},
-                        '5678': {id: '5678', content: '567', next: '1234'},
-                        '9101': {id: '9101', content: '890', next: '5678'},
-                    }
-                }
-
-            ],
-        },
-        {
-            id: 'study', name: 'study', notes: [
-                {
-                    id: 'note1', name: 'Event Driven Architecture', head: '2023-04-19T04:25:42.558Z', paragraphs: {
-                        '2023-04-19T04:25:42.558Z':
-                            {
-                                id: '2023-04-19T04:25:42.558Z',
-                                content: 'Для проектирования архитектуры приложения для заметок по EDA (Event-Driven Architecture) следует учитывать следующие принципы:',
-                                next: '2023-04-19T04:26:42.558Z'
-                            },
-                        '2023-04-19T04:26:42.558Z':
-                            {
-                                id: '2023-04-19T04:26:42.558Z',
-                                content: '1. Определить основные события, которые должны происходить в приложении, такие как создание, изменение или удаление заметок.',
-                                next: '2023-04-19T04:27:42.558Z'
-                            },
-                        '2023-04-19T04:27:42.558Z':
-                            {
-                                id: '2023-04-19T04:27:42.558Z',
-                                content: '2. Разработать модель событий, которая описывает состояние системы и как она реагирует на события.',
-                                next: '2023-04-19T04:28:42.558Z'
-                            },
-                        '2023-04-19T04:28:42.558Z':
-                            {
-                                id: '2023-04-19T04:28:42.558Z',
-                                content: '3. Разделить приложение на слои, такие как слой приложения, слой бизнес-логики и слой инфраструктуры.',
-                                next: null
-                            },
-                    }
-                }
-
-            ]
-        }
-    ]
+    vaults: []
 }
-
 
 const CREATE_VAULT = 'CREATE_VAULT';
 const UPDATE_VAULT = 'UPDATE_VAULT';
@@ -63,6 +16,8 @@ const CREATE_NOTE = 'CREATE_NOTE';
 const REMOVE_NOTE = 'REMOVE_NOTE';
 const UPDATE_NOTE = 'UPDATE_NOTE';
 const UPDATE_FIELDS = 'UPDATE_FIELDS';
+const ADD_LINK_NOTE = 'ADD_LINK_NOTE';
+const REMOVE_LINK_NOTE = 'REMOVE_LINK_NOTE';
 
 const CREATE_PARAGRAPH = 'CREATE_PARAGRAPH';
 const REMOVE_PARAGRAPH = 'REMOVE_PARAGRAPH';
@@ -80,6 +35,8 @@ export const removeNoteEvent = (payload) => ({type: REMOVE_NOTE, payload})
 export const createParagraphEvent = (payload) => ({type: CREATE_PARAGRAPH, payload})
 export const removeParagraphEvent = (payload) => ({type: REMOVE_PARAGRAPH, payload})
 export const updateParagraphEvent = (payload) => ({type: UPDATE_PARAGRAPH, payload})
+export const addNoteLinkEvent = (payload) => ({type: ADD_LINK_NOTE, payload});
+export const removeNoteLinkEvent = (payload) => ({type: REMOVE_LINK_NOTE, payload});
 
 export const loadNotesEvent = (payload) => ({type: LOAD_NOTES, payload});
 
@@ -105,6 +62,10 @@ export const vaultReducer = (state = defaultState, action) => {
             return updateParagraphUseCase(state, action.payload);
         case LOAD_NOTES:
             return loadNotesUseCase(state, action.payload);
+        case ADD_LINK_NOTE:
+            return addLinkNoteUseCase(state, action.payload);
+        case REMOVE_LINK_NOTE:
+            return removeLinkNoteUseCase(state, action.payload);
         default:
             return state;
     }
@@ -151,7 +112,7 @@ const updateVaultUseCase = (state, payload) => {
 
 const createNoteUseCase = (state, payload) => {
     NoteManager.createNote(payload)
-    let newNote = {deleted: false, id: payload.noteId, paragraphs: {}, color: 'white', title: ''};
+    let newNote = {deleted: false, id: payload.noteId, paragraphs: {}, color: 'white', title: '', links: new Set()};
     console.log(state.vaults);
     let newVaults = putUpdatedNoteIntoVaults(newNote, state.vaults, payload);
     console.log({vaults: newVaults});
@@ -172,6 +133,34 @@ const updateNoteUseCase = (state, payload) => {
 
     let newVaults = putUpdatedNoteIntoVaults(newNote, state.vaults, payload);
     console.log({vaults: newVaults});
+    return {vaults: newVaults};
+}
+
+const addLinkNoteUseCase = (state, payload) => {
+    console.log("Add note link use case");
+    console.log(payload);
+
+    let oldNote = getNote(state.vaults, payload);
+    let newLinks = oldNote.links;
+    newLinks.add(payload.link)
+    let newNote = {...oldNote, ...payload.updatedData, links: newLinks}
+    NoteManager.addLinkNote(payload)
+
+    let newVaults = putUpdatedNoteIntoVaults(newNote, state.vaults, payload);
+    return {vaults: newVaults};
+}
+
+const removeLinkNoteUseCase = (state, payload) => {
+    console.log("Remove note link use case");
+    console.log(payload);
+
+    let oldNote = getNote(state.vaults, payload);
+    let newLinks = oldNote.links;
+    newLinks.delete(payload.link)
+    let newNote = {...oldNote, ...payload.updatedData, links: newLinks}
+    NoteManager.removeLinkNote(payload)
+
+    let newVaults = putUpdatedNoteIntoVaults(newNote, state.vaults, payload);
     return {vaults: newVaults};
 }
 

@@ -1,13 +1,13 @@
 import React from 'react';
 import Input from "../../UI/input/Input";
-import RoundButton from "../../UI/roundbutton/RoundButton";
-import ColorBox from "../../UI/colorbox/ColorBox";
 import {useDispatch} from "react-redux";
 import Paragraph from "../../UI/paragraph/Paragraph";
 import Divider from "../../UI/divider/Divider";
-import {updateNoteEvent} from "../../../store/vaultReducer";
+import {createParagraphEvent, updateNoteEvent} from "../../../store/vaultReducer";
 import {getParagraphs} from "../../../core/getParagraphs";
 import {useProfile} from "../../../hooks/useProfile";
+import NoteFormLink from "./NoteFormLink";
+import NoteToolBar from "./NoteToolBar";
 
 const NoteFormV2 = ({address, formNote, remove}) => {
     const dispatch = useDispatch();
@@ -43,7 +43,9 @@ const NoteFormV2 = ({address, formNote, remove}) => {
             <Input placeholder="Заголовок"
                    onChange={e => setTitle(e.target.value)}
                    value={formNote.title}/>
-            <Divider address={address} prev={null} next={formNote.head}/>
+            <Divider click={() => dispatch(createParagraphEvent({
+                ...address, prev: null, next: formNote.head, nowUser
+            }))}/>
             {paragraphs.map(paragraph =>
                 <Paragraph
                     style={{backgroundColor: defineColor(formNote)}}
@@ -52,17 +54,8 @@ const NoteFormV2 = ({address, formNote, remove}) => {
                     address={address}/>
             )
             }
-            <div style={{display: 'flex', alignItems: "center"}}>
-                <RoundButton onClick={() => remove()}><span role="img" aria-label="delete">🗑️</span></RoundButton>
-                <div style={{display: 'flex', alignItems: "center"}}>
-                    {colors.map((color, id) =>
-                        <ColorBox chosen={formNote.color === color}
-                                  key={id}
-                                  color={color}
-                                  onClick={() => chooseColor(color)}
-                        />)}
-                </div>
-            </div>
+            <NoteFormLink links={formNote.links} address={address}/>
+            <NoteToolBar remove={remove} chooseColor={chooseColor} colors={colors} formNoteColor={formNote.color}/>
         </div>
     );
 };

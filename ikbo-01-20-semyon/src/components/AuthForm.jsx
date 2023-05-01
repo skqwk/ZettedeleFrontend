@@ -21,6 +21,10 @@ const AuthForm = () => {
         console.log('Register');
         setRegisterForm(true);
     }
+
+    const closeRegisterForm = () => {setRegisterForm(false)};
+    const closeLoginForm = () => {setLoginForm(false)};
+
     return (
         <div style={{
             width: '70%',
@@ -28,11 +32,11 @@ const AuthForm = () => {
             flexDirection: 'column',
             justifyContent: 'space-around'
         }}>
-            <Modal visible={registerForm} setVisible={setRegisterForm}>
-                <RegisterForm close={() => setRegisterForm(false)}/>
+            <Modal visible={registerForm} setVisible={setRegisterForm} close={closeRegisterForm}>
+                <RegisterForm visible={registerForm} close={closeRegisterForm}/>
             </Modal>
-            <Modal visible={loginForm} setVisible={setLoginForm}>
-                <LoginForm close={() => setLoginForm(false)}/>
+            <Modal visible={loginForm} setVisible={setLoginForm} close={closeLoginForm}>
+                <LoginForm visible={loginForm} close={closeLoginForm}/>
             </Modal>
 
             {offline && <Hint>Восстановите подключение к сети, чтобы иметь возможность авторизоваться</Hint>}

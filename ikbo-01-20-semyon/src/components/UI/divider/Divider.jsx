@@ -4,15 +4,12 @@ import {createParagraphEvent} from "../../../store/vaultReducer";
 import {useDispatch} from "react-redux";
 import {useProfile} from "../../../hooks/useProfile";
 
-const Divider = ({address, prev, next}) => {
-    const dispatch = useDispatch();
-    const nowUser = useProfile();
-
+const Divider = ({click}) => {
     return (
         <div className={classes.dividerContainer}>
             <div className={classes.divider}/>
             <div className={classes.add}
-                 onClick={() => dispatch(createParagraphEvent({...address, prev, next, nowUser}))}
+                 onClick={click}
             >+
             </div>
             <div className={classes.divider}/>

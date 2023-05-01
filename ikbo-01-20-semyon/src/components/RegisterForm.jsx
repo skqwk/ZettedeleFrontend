@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Input from "./UI/input/Input";
 import Button from "./UI/button/Button";
 import AuthService from "../API/AuthService";
 import {isBlank} from "../utils/ValidationUtil";
 
-const RegisterForm = ({close}) => {
+const RegisterForm = ({visible, close}) => {
     const [form, setForm] = useState({login: '', password: '', repeatedPassword: ''});
 
     const register = () => {
@@ -17,9 +17,14 @@ const RegisterForm = ({close}) => {
 
     const isNotValid = () => {
         return isBlank(form.login)
-            && isBlank(form.password)
-            && isBlank(form.repeatedPassword);
+            || isBlank(form.password)
+            || isBlank(form.repeatedPassword)
+            || form.password !== form.repeatedPassword;
     }
+
+    useEffect(() => {
+        setForm({login: '', password: '', repeatedPassword: ''})
+    }, [visible])
 
     return (
         <div style={{display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>

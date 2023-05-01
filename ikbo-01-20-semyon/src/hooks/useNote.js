@@ -4,7 +4,8 @@ const emptyNote = {
     id: '',
     name: '',
     color: 'white',
-    paragraphs: {}
+    paragraphs: {},
+    links: new Set(),
 }
 
 export const useNote = (vaultId, noteId) => {

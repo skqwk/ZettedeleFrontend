@@ -1,40 +1,84 @@
-import React, {useState} from 'react';
-import TextArea from "../components/UI/textarea/TextArea";
+import React, {useEffect, useState} from 'react';
 import Button from "../components/UI/button/Button";
-import axios from "axios";
+import NoteMenu from "../components/UI/notemenu/NoteMenu";
+import Input from "../components/UI/input/Input";
+import {useProfile} from "../hooks/useProfile";
+import {loadNotesEvent} from "../store/vaultReducer";
+import {useDispatch} from "react-redux";
+import {getCaretPosition} from "../utils/CarretPosition";
+import TextArea from "../components/UI/textarea/TextArea";
 
 const Test = () => {
     const [token, setToken] = useState('');
-    const [response, setResponse] = useState('');
+    const [visibleNoteMenu, setVisibleNoteMenu] = useState(false);
+    const [vaultId, setVaultId] = useState('788d4f16-5cb7-4dec-8190-de8ab9296032');
+    const [position, setPosition] = useState({x: 0, y: 0});
+    const [linkedNote, setLinkedNote] = useState(null);
+    const dispatch = useDispatch();
+    const [caret, setCaret] = useState(0);
 
-    const sendRequest = () => {
-        getProfile(token)
-            .then(rs => {
-                console.log(rs)
-                setResponse(rs);
-            })
-            .catch(err => {
-                console.log(err);
-                setResponse(err);
-            })
+    const click = () => {
+        console.log('Click!');
     }
 
-    const getProfile = async (authToken) => {
-        const config = {
-            headers: {
-                'Authorization': authToken
-            }
+    const setText = (e) => {
+        let cursorPos = e.target.selectionStart;
+        let lastChar = e.target.value[cursorPos - 1];
+        if (lastChar === '@') {
+            setVisibleNoteMenu(true);
+        } else if (visibleNoteMenu) {
+            setVisibleNoteMenu(false);
         }
-        return await axios.get(`http://localhost:8080/profile`, config);
+        if (e.target.value.length > 0) {
+            let caretPosition = getCaretPosition(document.activeElement)
+            setPosition({...caretPosition});
+        }
+        console.log(e);
+        setToken(e.target.value);
     }
 
-    return (
-        <div>
-            <TextArea value={token} onChange={e => setToken(e.target.value)}/>
-            <Button onClick={() => sendRequest()}>ОТПРАВИТЬ</Button>
-            <TextArea value={response} readonly/>
-        </div>
-    );
+    useEffect(() => {
+        if (linkedNote) {
+            let cursorPos = caret;
+            console.log(cursorPos);
+            let link = `{@note=${linkedNote}} `
+            let before = token.slice(0, cursorPos - 1);
+            console.log(before);
+
+            let after = token.slice(cursorPos, -1);
+            console.log(after);
+
+
+            setToken(before + link + after);
+            setVisibleNoteMenu(false);
+            setLinkedNote(null);
+        }
+    }, [linkedNote])
+
+    useEffect(() => {
+        setCaret(document.activeElement.selectionStart);
+    }, [document.activeElement.selectionStart])
+
+
+    const nowUser = useProfile();
+
+
+    useEffect(() => {
+        dispatch(loadNotesEvent({username: nowUser}));
+    }, [])
+
+    return (<div>
+            <Input inputName="VAULT ID" value={vaultId} onChange={e => setVaultId(e.target.value)}/>
+            <Input inputName="POINTS" value={`x = ${position.x}, y = ${position.y}`}/>
+            <TextArea value={token} onChange={e => setText(e)}/>
+            {visibleNoteMenu && <NoteMenu
+                visible={visibleNoteMenu}
+                vaultId={vaultId}
+                position={position}
+                setLinkedNote={setLinkedNote}
+            />}
+            <Button onClick={() => click()}>ОТПРАВИТЬ</Button>
+        </div>);
 };
 
 export default Test;

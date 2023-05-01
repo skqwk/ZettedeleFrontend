@@ -2,7 +2,7 @@ import React, {useEffect, useRef} from 'react';
 import classes from "./Paragraph.module.css";
 import useAutosizeTextArea from "../../../hooks/useAutosizeTextArea";
 import {useDispatch} from "react-redux";
-import {removeParagraphEvent, updateParagraphEvent} from "../../../store/vaultReducer";
+import {createParagraphEvent, removeParagraphEvent, updateParagraphEvent} from "../../../store/vaultReducer";
 import useAutosizeTextAreaInit from "../../../hooks/useAutosizeTextAreaInit";
 import Divider from "../divider/Divider";
 import {useProfile} from "../../../hooks/useProfile";
@@ -34,12 +34,12 @@ const Paragraph = ({paragraph, address, ...props}) => {
                 onChange={updateContent}
                 value={paragraph.content}
                 className={classes.paragraph} {...props}>
-
             </textarea>
             <Sidebar>
                 <SidebarButton onClick={() => remove()}/>
             </Sidebar>
-            <Divider address={address} prev={paragraph.id} next={paragraph.next}/>
+            <Divider click={() => dispatch(createParagraphEvent({
+                ...address, prev: paragraph.id, next: paragraph.next, nowUser}))}/>
         </div>
     );
 };

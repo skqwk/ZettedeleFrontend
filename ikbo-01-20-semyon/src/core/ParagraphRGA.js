@@ -6,6 +6,7 @@ const createNoteOperation = (payload, note) => {
     note.deleted = false;
     note.createdAt = payload.createdAt;
     note.color = 'white';
+    note.links = new Set();
 }
 
 
@@ -19,6 +20,16 @@ const updateNoteOperation = (payload, note) => {
     let field = Object.keys(payload)[0];
     let value = Object.values(payload)[0]
     note[field] = value;
+}
+
+const addLinkNoteOperation = (payload, note) => {
+    console.log('addLinkNoteOperation');
+    note.links.add(payload.link);
+}
+
+const removeLinkNoteOperation = (payload, note) => {
+    console.log('removeLinkNoteOperation');
+    note.links.delete(payload.link);
 }
 
 const createParagraphOperation = (payload, note) => {
@@ -96,6 +107,8 @@ export class ParagraphRGA {
         'CREATE_PARAGRAPH': createParagraphOperation,
         'UPDATE_PARAGRAPH': updateParagraphOperation,
         'REMOVE_PARAGRAPH': removeParagraphOperation,
+        'ADD_LINK_NOTE': addLinkNoteOperation,
+        'REMOVE_LINK_NOTE': removeLinkNoteOperation
     }
 
     static applyEvent(event, note) {

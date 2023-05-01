@@ -14,6 +14,8 @@ export class NoteManager {
     static updateEvents = {
         NOTE_PATH: '',
         CREATE_NOTE: {},
+        ADD_LINK_NOTE: {},
+        REMOVE_LINK_NOTE: {},
         UPDATE_NOTE: {
             UPDATE_FIELDS: {},
             CREATE_PARAGRAPH: {},
@@ -27,6 +29,8 @@ export class NoteManager {
         this.updateEvents = {
             NOTE_PATH: '',
             CREATE_NOTE: {},
+            ADD_LINK_NOTE: {},
+            REMOVE_LINK_NOTE: {},
             UPDATE_NOTE: {
                 UPDATE_FIELDS: {},
                 CREATE_PARAGRAPH: {},
@@ -87,6 +91,17 @@ export class NoteManager {
             let updates = this.updateEvents.UPDATE_NOTE.UPDATE_PARAGRAPH;
             let removes = this.updateEvents.UPDATE_NOTE.REMOVE_PARAGRAPH;
 
+            let addLinks = this.updateEvents.ADD_LINK_NOTE;
+            let removeLinks = this.updateEvents.REMOVE_LINK_NOTE;
+
+            let addLinkEvents = Object.keys(addLinks)
+                .filter(id => !(id in removeLinks))
+                .map(id => addLinks[id]);
+
+            let removeLinkEvents = Object.keys(removeLinks)
+                .filter(id => !(id in addLinks))
+                .map(id => removeLinks[id]);
+
             // TODO: Оптимизация записей в файл
             // optimizeUpdates(creates, updates, removes);
 
@@ -95,7 +110,12 @@ export class NoteManager {
             let updateEvents = this.extractValueByKey(updates);
             let removeEvents = this.extractValueByKey(removes);
 
-            let events = [...createEvents, ...updateEvents, ...removeEvents, ...fieldUpdateEvents];
+            let events = [
+                ...createEvents, ...updateEvents,
+                ...removeEvents, ...fieldUpdateEvents,
+                ...addLinkEvents, ... removeLinkEvents
+            ];
+
             console.log('EVENTS FOR FLUSH');
             console.log(events);
             let sortedEvents = this.sortEvents(events);
@@ -156,6 +176,32 @@ export class NoteManager {
         }
 
         console.log(this.updateEvents);
+    }
+
+    static addLinkNote(payload) {
+        this.updateEvents.NOTE_PATH = join(DATA_PATH, payload.nowUser, payload.vaultId, payload.noteId);
+        console.log(payload);
+        this.updateEvents.ADD_LINK_NOTE[payload.link] =
+            {
+                event: "ADD_LINK_NOTE",
+                happenAt: HLC.timestamp(),
+                payload: {link: payload.link},
+                id: payload.noteId,
+                parentId: payload.vaultId
+            }
+    }
+
+    static removeLinkNote(payload) {
+        this.updateEvents.NOTE_PATH = join(DATA_PATH, payload.nowUser, payload.vaultId, payload.noteId);
+        console.log(payload);
+        this.updateEvents.REMOVE_LINK_NOTE[payload.link] =
+            {
+                event: "REMOVE_LINK_NOTE",
+                happenAt: HLC.timestamp(),
+                payload: {link: payload.link},
+                id: payload.noteId,
+                parentId: payload.vaultId
+            }
     }
 
     static createPayloadDependsOnEvent = (event, payload) => {

@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Input from "./UI/input/Input";
 import Button from "./UI/button/Button";
 import AuthService from "../API/AuthService";
 import {useDispatch} from "react-redux";
 import {loginAction} from "../store/authReducer";
 
-const LoginForm = ({close}) => {
+const LoginForm = ({visible, close}) => {
     const [form, setForm] = useState({login: '', password: ''});
     const dispatch = useDispatch();
 
@@ -16,10 +16,16 @@ const LoginForm = ({close}) => {
                     dispatch(loginAction(rs.data))
                     close();
                 } else {
-
+                    console.log("ERROR DURING LOGIN");
+                    console.log(rs.status);
+                    console.log(rs);
                 }
             })
     }
+
+    useEffect(() => {
+        setForm({login: '', password: ''});
+    }, [visible])
 
     return (
         <div style={{display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
