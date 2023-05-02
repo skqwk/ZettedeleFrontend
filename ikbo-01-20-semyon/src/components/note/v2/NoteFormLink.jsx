@@ -39,7 +39,8 @@ const NoteFormLink = ({links, address, setNoteId}) => {
                 {
                     sharedLinks.map(
                         link =>
-                        <NoteItem link={link} remove={remove} setNoteId={setNoteId} parentNote={address.noteId}/>
+                        <NoteItem link={link} remove={remove} setNoteId={setNoteId}
+                                  parentNote={address.noteId} vaultId={address.vaultId}/>
                     )
                 }
             </div>

@@ -175,7 +175,7 @@ const removeNoteUseCase = (state, payload) => {
 
 
 const loadNotesUseCase = (state, payload) => {
-    let vaults = NoteManager.loadNotesInMemory(payload.username);
+    let vaults = [] // NoteFileLoader.loadNotesInMemory(payload.username);
 
     return {...state, vaults: vaults};
 }

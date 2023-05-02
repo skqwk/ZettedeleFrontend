@@ -3,9 +3,9 @@ import Modal from "../../UI/modal/Modal";
 import NoteFormV2 from "./NoteFormV2";
 import {useNote} from "../../../hooks/useNote";
 import {removeNoteEvent} from "../../../store/vaultReducer";
-import {NoteManager} from "../../../core/NoteManager";
 import {useDispatch} from "react-redux";
 import {useProfile} from "../../../hooks/useProfile";
+import {FlushUpdater} from "../../../core/filesystem/FlushUpdater";
 
 const EditNoteForm = ({vaultId, noteId, setNoteId, ...props}) => {
     const [visible, setVisible] = useState(false);
@@ -14,7 +14,7 @@ const EditNoteForm = ({vaultId, noteId, setNoteId, ...props}) => {
     const nowUser = useProfile();
 
     const close = () => {
-        NoteManager.flushUpdates(noteId);
+        FlushUpdater.flushUpdates(noteId, vaultId, nowUser);
         setVisible(false);
         setNoteId(null);
     }
@@ -29,7 +29,7 @@ const EditNoteForm = ({vaultId, noteId, setNoteId, ...props}) => {
         setVisible(false);
         let payload = {vaultId, noteId: noteId, nowUser};
         dispatch(removeNoteEvent(payload))
-        NoteManager.flushUpdates(noteId);
+        FlushUpdater.flushUpdates(noteId, vaultId, nowUser);
         console.log('Remove note');
     }
 

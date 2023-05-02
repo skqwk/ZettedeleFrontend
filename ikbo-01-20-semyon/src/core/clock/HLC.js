@@ -1,45 +1,8 @@
 import {HybridTimestamp} from "./HybridTimestamp";
-import {DATA_PATH} from "../config/index";
-
-const fs = window.require('fs');
-const {join} = window.require('path');
-
-const HLC_FILE_NAME = 'hlc.json';
 
 export class HLC {
     static singleton;
     static nowUser;
-
-    static init(nowUser, nodeId) {
-        this.nowUser = nowUser;
-        let hlcPath = join(DATA_PATH, nowUser, HLC_FILE_NAME);
-        let hlc = {};
-        if (fs.existsSync(hlcPath)) {
-            let buffer = fs.readFileSync(hlcPath);
-            hlc = JSON.parse(buffer);
-            if (!hlc.latestTimestamp) {
-                this.initHLCConfig(hlc, nodeId);
-            } else {
-                let hybridTimestamp = HybridTimestamp.parse(hlc.latestTimestamp);
-                if (nodeId !== hybridTimestamp.nodeId) {
-                    throw new Error(`$Сохраненный id узла = ${hybridTimestamp.nodeId} не совпал с инициализированным ${nodeId}`);
-                }
-            }
-        } else {
-            this.initHLCConfig(hlc, nodeId);
-        }
-
-        let hybridTimestamp = HybridTimestamp.parse(hlc.latestTimestamp);
-        this.singleton = new HLC(hybridTimestamp.wallClockTime, nodeId);
-        this.writeToFile(hlc.latestTimestamp);
-        console.log(hlc);
-    }
-
-    static initHLCConfig(hlc, nodeId) {
-        let currentTimeMillis = new Date().getTime();
-        let hybridTimestamp = new HybridTimestamp(currentTimeMillis, 0, nodeId);
-        hlc.latestTimestamp = hybridTimestamp.toString();
-    }
 
     static timestamp() {
         let timestamp = this.singleton.now().toString();
@@ -47,11 +10,6 @@ export class HLC {
         return timestamp;
     }
 
-    static writeToFile(timestamp) {
-        let hlcPath = join(DATA_PATH, this.nowUser, HLC_FILE_NAME);
-        let hlc = {latestTimestamp: timestamp};
-        fs.writeFileSync(hlcPath, JSON.stringify(hlc, null, 2));
-    }
 
     latestTime;
     nodeId;

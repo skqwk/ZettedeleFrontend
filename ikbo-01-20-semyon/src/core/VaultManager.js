@@ -1,16 +1,12 @@
 import {HLC} from "./clock/HLC";
-import {toJson} from "../utils/JsonUtil";
-import {DATA_PATH} from "./config/index";
 
-const fs = window.require('fs');
-const {join} = window.require('path');
 
 export const VAULT_STATE_FILE = 'vault.state';
 
 export class VaultManager {
     static createVault(payload) {
-        let vaultPath = join(DATA_PATH, payload.nowUser, payload.vaultId);
-        let vaultPathState = this.getVaultPathState(payload);
+        // let vaultPath = join(DATA_PATH, payload.nowUser, payload.vaultId);
+        // let vaultPathState = this.getVaultPathState(payload);
 
         let createVaultMessage = {
             event: 'CREATE_VAULT',
@@ -21,12 +17,12 @@ export class VaultManager {
             }
         }
 
-        fs.mkdirSync(vaultPath);
-        fs.writeFileSync(vaultPathState, toJson(createVaultMessage));
+        // fs.mkdirSync(vaultPath);
+        // fs.writeFileSync(vaultPathState, toJson(createVaultMessage));
     }
 
     static removeVault(payload) {
-        let vaultPathState = this.getVaultPathState(payload);
+        // let vaultPathState = this.getVaultPathState(payload);
 
         let removeVaultMessage = {
             event: 'REMOVE_VAULT',
@@ -35,11 +31,11 @@ export class VaultManager {
             payload: {}
         }
 
-        fs.appendFileSync(vaultPathState, toJson(removeVaultMessage));
+        // fs.appendFileSync(vaultPathState, toJson(removeVaultMessage));
     }
 
     static updateVault(payload) {
-        let vaultPathState = this.getVaultPathState(payload);
+        // let vaultPathState = this.getVaultPathState(payload);
 
         let updateVaultMessage = {
             event: 'UPDATE_VAULT',
@@ -48,12 +44,12 @@ export class VaultManager {
             payload: payload.body
         }
 
-        fs.appendFileSync(vaultPathState, toJson(updateVaultMessage));
+        // fs.appendFileSync(vaultPathState, toJson(updateVaultMessage));
     }
 
-    static getVaultPathState(payload) {
-        let nowUser = payload.nowUser;
-        let vaultPath = join(DATA_PATH, nowUser, payload.vaultId)
-        return join(vaultPath, VAULT_STATE_FILE);
-    }
+    // static getVaultPathState(payload) {
+    //     let nowUser = payload.nowUser;
+    //     let vaultPath = join(DATA_PATH, nowUser, payload.vaultId)
+    //     return join(vaultPath, VAULT_STATE_FILE);
+    // }
 }

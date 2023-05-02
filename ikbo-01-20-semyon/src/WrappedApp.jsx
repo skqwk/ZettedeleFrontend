@@ -1,20 +1,16 @@
 import React, {useEffect} from 'react';
 import {useProfile} from "./hooks/useProfile";
-import SelectProfileForm from "./components/SelectProfileForm";
 import RoutedApp from "./RoutedApp";
+import {useSelector} from "react-redux";
 
 const WrappedApp = () => {
     const nowUser = useProfile();
-
-    useEffect(() => {
-
-    }, [nowUser])
-
+    const isAuth = useSelector(state => state.auth.isAuth);
     return (
         <div className="App">
-            {nowUser
+            {isAuth
                 ? <RoutedApp/>
-                : <SelectProfileForm/>
+                : <RoutedApp/>
             }
         </div>
     );

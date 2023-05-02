@@ -10,7 +10,7 @@ import ProfileForm from "../components/ProfileForm";
 import Input from "../components/UI/input/Input";
 import {useProfile} from "../hooks/useProfile";
 import {resetProfileAction} from "../store/profileReducer";
-import {SyncManager} from "../core/SyncManager";
+ // import {SyncManager} from "../core/SyncManager";
 
 const Profile = () => {
     const dispatch = useDispatch();
@@ -29,7 +29,7 @@ const Profile = () => {
     }
 
     const syncNotes = () => {
-        SyncManager.sync(authToken);
+        // SyncManager.sync(authToken);
     }
 
     const resetProfile = () => {

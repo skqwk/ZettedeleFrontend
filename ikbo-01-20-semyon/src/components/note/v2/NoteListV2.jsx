@@ -4,6 +4,7 @@ import {removeNoteEvent} from "../../../store/vaultReducer";
 import {NoteManager} from "../../../core/NoteManager";
 import {useProfile} from "../../../hooks/useProfile";
 import {useDispatch} from "react-redux";
+import {FlushUpdater} from "../../../core/filesystem/FlushUpdater";
 
 const NoteListV2 = ({notes, setNoteId, address}) => {
     const dispatch = useDispatch();
@@ -21,7 +22,7 @@ const NoteListV2 = ({notes, setNoteId, address}) => {
     const remove = (noteId) => {
         let payload = {vaultId: address.vaultId, noteId: noteId, nowUser};
         dispatch(removeNoteEvent(payload))
-        NoteManager.flushUpdates(noteId);
+        FlushUpdater.flushUpdates(noteId, address.vaultId, nowUser);
     }
 
     return (

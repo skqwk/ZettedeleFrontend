@@ -7,6 +7,7 @@ import {useProfile} from "../../../hooks/useProfile";
 import {useNote} from "../../../hooks/useNote";
 import {NoteManager} from "../../../core/NoteManager";
 import {v4} from 'uuid';
+import {FlushUpdater} from "../../../core/filesystem/FlushUpdater";
 
 const CreateNoteForm = ({vaultId, isOpenCreateForm, setOpenCreateForm, setNoteId, ...props}) => {
     const dispatch = useDispatch();
@@ -16,7 +17,7 @@ const CreateNoteForm = ({vaultId, isOpenCreateForm, setOpenCreateForm, setNoteId
     const note = useNote(vaultId, newNoteId);
 
     const close = () => {
-        NoteManager.flushUpdates(newNoteId);
+        FlushUpdater.flushUpdates(newNoteId, vaultId, nowUser);
         setVisible(false);
         setOpenCreateForm(false);
     }
@@ -40,7 +41,7 @@ const CreateNoteForm = ({vaultId, isOpenCreateForm, setOpenCreateForm, setNoteId
         setOpenCreateForm(false);
         let payload = {vaultId, noteId: newNoteId, nowUser};
         dispatch(removeNoteEvent(payload))
-        NoteManager.flushUpdates(newNoteId);
+        FlushUpdater.flushUpdates(newNoteId, vaultId, nowUser);
         console.log('Remove note');
     }
 

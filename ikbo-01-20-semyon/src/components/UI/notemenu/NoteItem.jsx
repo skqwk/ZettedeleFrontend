@@ -1,12 +1,15 @@
 import React from 'react';
 import Sidebar from "../paragraph/sidebar/Sidebar";
 import SidebarButton from "../paragraph/sidebar/SidebarButton";
-import {NoteManager} from "../../../core/NoteManager";
+import {useProfile} from "../../../hooks/useProfile";
+import {FlushUpdater} from "../../../core/filesystem/FlushUpdater";
 
-const NoteItem = ({link, remove, setNoteId, parentNote}) => {
+const NoteItem = ({link, remove, setNoteId, parentNote, vaultId}) => {
+    const nowUser = useProfile();
+
     const openLink = (noteId) => {
         console.log(`Open link note with id = ${noteId}`);
-        NoteManager.flushUpdates(parentNote);
+        FlushUpdater.flushUpdates(parentNote, vaultId, nowUser);
         setNoteId(noteId);
     }
 
