@@ -1,10 +1,14 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Route, Routes} from "react-router-dom";
-import {excludedRoutes, routes} from "../router/index";
+import {adminRoutes, defaultRoutes, excludedRoutes, routes} from "../router/index";
+import {useSelector} from "react-redux";
+import {useNavbarRoutes} from "../hooks/useNavbarRoutes";
 
 const AppRouter = () => {
+    const [navbarRoutes, setNavbarRoutes] = useState([]);
+    useNavbarRoutes(setNavbarRoutes);
 
-    function extractRoute(route) {
+    const extractRoute = (route) => {
         return (
             <Route path={route.to}
                    element={<route.element/>}
@@ -15,7 +19,7 @@ const AppRouter = () => {
 
     return (
         <Routes>
-            {routes.map(route => extractRoute(route))}
+            {navbarRoutes.map(route => extractRoute(route))}
             {excludedRoutes.map(route => extractRoute(route))}
         </Routes>
     );

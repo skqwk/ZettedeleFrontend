@@ -36,7 +36,6 @@ const EditVaultForm = ({vault, visible, setVisible, setVaultId}) => {
         dispatch(removeVaultEvent({vaultId: vault.id, nowUser, authToken: auth.authToken}));
     }
 
-
     return (
         <div>
             <Modal visible={visible} close={close}>

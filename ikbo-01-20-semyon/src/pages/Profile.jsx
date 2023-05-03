@@ -39,20 +39,14 @@ const Profile = () => {
     return (
         <div className="profile">
             <div style={{width: "60%", alignItems: 'center', display: 'flex', flexDirection: 'column'}}>
-                <Header size={18}>ТЕКУЩИЙ ПРОФИЛЬ</Header>
-                <Input inputName="НАЗВАНИЕ ПРОФИЛЯ" readOnly value={nowProfile}/>
-                <Button onClick={() => resetProfile()}>СМЕНИТЬ ПРОФИЛЬ</Button>
                 <Header size={18}>АККАУНТ</Header>
                 {isAuth
                     ? <ProfileForm/>
                     : <AuthForm/>
                 }
                 <Header size={18}>НАСТРОЙКА</Header>
-                {!isAuth && <Hint>Авторизуйтесь, чтобы синхронизировать заметки</Hint>}
+                {!isAuth && <Hint>Авторизуйтесь, чтобы иметь возможность просматривать заметки</Hint>}
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end'}}>
-                    <Switch switchName="ИНТЕРНЕТ" onToggle={toggle} checked={!offline}/>
-                    <Button onClick={() => syncNotes()} disabled={!isAuth || offline}>СИНХРОНИЗИРОВАТЬ</Button>
-                    {/*<RoundButton onClick={e => dispatch(loadNotesEvent({username: nowUser}))}>⟳</RoundButton>*/}
                 </div>
             </div>
         </div>

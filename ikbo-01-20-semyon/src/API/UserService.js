@@ -13,4 +13,15 @@ export class UserService {
         console.log(rs)
         return rs;
     }
+
+    static async getUsers(authToken) {
+        const rs = await axios.get(`${this.API}/admin/users`, {
+            headers: {
+                'Authorization': authToken,
+                'Access-Control-Allow-Origin': '*'
+            }
+        });
+        console.log(rs)
+        return rs;
+    }
 }

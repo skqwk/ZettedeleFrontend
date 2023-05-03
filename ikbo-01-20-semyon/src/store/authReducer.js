@@ -1,6 +1,7 @@
 const defaultState = {
-    isAuth: true,
-    authToken: "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJVU0VSIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XSwiaWF0IjoxNjgzMDg2MTczLCJleHAiOjE2ODQyOTU3NzN9.Sw6zWy3BMh_h8P81d4X1SygIC-Vx2gor0VK-g9uRTuxQJLcrfF-TMnrdTThVNoqL"
+    isAuth: false,
+    authToken: null,
+    role: null
 }
 
 const LOGOUT = 'LOGOUT';
@@ -22,10 +23,11 @@ export const loginAction = (payload) => ({type: LOGIN, payload});
 
 const logoutUseCase = (state) => {
     console.log(`User logout`);
-    return {...state, isAuth: false, authToken: null};
+    return {...state, isAuth: false, authToken: null, role: null};
 };
 
 const loginUseCase = (state, payload) => {
     console.log(`User login`);
-    return {...state, isAuth: true, authToken: payload.authToken};
+    console.log(payload);
+    return {...state, isAuth: true, authToken: payload.authToken, role: payload.role};
 };

@@ -12,7 +12,10 @@ const ProfileForm = () => {
     const auth = useSelector(state => state.auth);
     const logout = () => {
         console.log('Logout');
-        dispatch(logoutAction());
+        dispatch(logoutAction())
+        localStorage.removeItem("nodeId");
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("role");
     }
 
     useEffect(() => {

@@ -1,17 +1,27 @@
 import React, {useEffect} from 'react';
-import {useProfile} from "./hooks/useProfile";
 import RoutedApp from "./RoutedApp";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {loginAction} from "./store/authReducer";
+import {HLC} from "./core/clock/HLC";
 
 const WrappedApp = () => {
-    const nowUser = useProfile();
-    const isAuth = useSelector(state => state.auth.isAuth);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        let authToken = localStorage.getItem("authToken");
+        let role = localStorage.getItem("role");
+        let nodeId = localStorage.getItem("nodeId");
+
+        if (authToken && role && nodeId) {
+            dispatch(loginAction({role, authToken}));
+            HLC.init(nodeId);
+        }
+
+    }, [])
+
     return (
         <div className="App">
-            {isAuth
-                ? <RoutedApp/>
-                : <RoutedApp/>
-            }
+            <RoutedApp/>
         </div>
     );
 };

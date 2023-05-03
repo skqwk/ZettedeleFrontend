@@ -2,8 +2,9 @@ import React, {useEffect, useState} from 'react';
 import Input from "./UI/input/Input";
 import Button from "./UI/button/Button";
 import AuthService from "../API/AuthService";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {loginAction} from "../store/authReducer";
+import {HLC} from "../core/clock/HLC";
 
 const LoginForm = ({visible, close}) => {
     const [form, setForm] = useState({login: '', password: ''});
@@ -13,7 +14,21 @@ const LoginForm = ({visible, close}) => {
         AuthService.auth(form.login, form.password)
             .then(rs => {
                 if (rs.status === 200) {
+                    console.log(rs.data);
                     dispatch(loginAction(rs.data))
+                    localStorage.setItem("role", rs.data.role);
+                    localStorage.setItem("authToken", rs.data.authToken);
+                    AuthService.getNodeId(rs.data.authToken)
+                        .then(rs => {
+                            if (rs.status === 200) {
+                                HLC.init(rs.data.nodeId)
+                                localStorage.setItem("nodeId", rs.data.nodeId);
+                            } else {
+                                console.log("ERROR DURING INIT HLC");
+                                console.log(rs.status);
+                            }
+                        })
+
                     close();
                 } else {
                     console.log("ERROR DURING LOGIN");

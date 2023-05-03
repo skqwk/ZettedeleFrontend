@@ -3,15 +3,22 @@ import Search from "../pages/Search";
 import About from "../pages/About";
 import Notes from "../pages/Notes";
 import GraphView from "../pages/GraphView";
+import Users from "../pages/Users";
 
 export const routes = [
     {name: "Профиль", to: "/profile", element: Profile},
-    // {name: "Хранилища", to: "/vaults", element: Vaults},
     {name: "Поиск", to: "/search", element: Search},
-    // {name: "Настройки", to: "/setup", element: Setup},
     {name: "Заметки", to: "/notes", element: Notes},
     {name: "Граф", to: "/graph", element: GraphView},
-    // {name: "Тест", to: "/test", element: Test},
+]
+
+export const adminRoutes = [
+    {name: "Профиль", to: "/profile", element: Profile},
+    {name: "Пользователи", to: "/user", element: Users},
+]
+
+export const defaultRoutes = [
+    {name: "Авторизация", to: "/auth", element: Profile}
 ]
 
 export const excludedRoutes = [

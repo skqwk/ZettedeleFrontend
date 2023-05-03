@@ -20,4 +20,14 @@ export default class AuthService {
         })
     }
 
+    static async getNodeId(authToken) {
+        const rs = await axios.get(`${this.API}/node`, {
+            headers: {
+                'Authorization': authToken,
+                'Access-Control-Allow-Origin': '*'
+            }
+        });
+        console.log(rs)
+        return rs;
+    }
 }
