@@ -5,6 +5,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {Graph} from "react-d3-graph";
 import {loadNotesEvent} from "../store/vaultReducer";
 import {useProfile} from "../hooks/useProfile";
+import {EventService} from "../API/EventService";
+import {NoteWebLoader} from "../core/web/NoteWebLoader";
 
 const GraphView = () => {
     const [vaultId, setVaultId] = useState('');
@@ -13,13 +15,20 @@ const GraphView = () => {
     const nowUser = useProfile();
     const dispatch = useDispatch();
     const vault = useVault(vaultId);
+    const auth = useSelector(state => state.auth);
 
     const vaultNames = useSelector(state => state.vault.vaults
         .filter(v => !v.deleted)
         .map(v => ({value: v.id, name: v.name})))
 
     useEffect(() => {
-        dispatch(loadNotesEvent({username: nowUser}));
+        EventService.getAllEvents(auth.authToken)
+            .then(rs => {
+                console.log("Get all events!")
+                console.log(rs.data)
+                let vaults = NoteWebLoader.applyServerEvents(rs.data);
+                dispatch(loadNotesEvent({vaults}));
+            })
     }, [])
 
     useEffect(() => {

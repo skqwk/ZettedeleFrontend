@@ -1,13 +1,16 @@
 import {HybridTimestamp} from "./HybridTimestamp";
 
 export class HLC {
-    static singleton;
+    static singleton = null;
     static nowUser;
 
+    static init(nodeId) {
+        this.singleton = new HLC(new Date().getTime(), nodeId);
+    }
+
+
     static timestamp() {
-        let timestamp = this.singleton.now().toString();
-        this.writeToFile(timestamp);
-        return timestamp;
+        return this.singleton.now().toString();
     }
 
 
@@ -56,7 +59,7 @@ export class HLC {
         // [3] - Временная метка данного клиента
         this.latestTime = this.max(now, remoteTimestamp, this.latestTime);
         this.latestTime = this.latestTime.addTicks(1);
-        console.log(this.latestTime);
+        // console.log(this.latestTime);
         return this.latestTime;
     }
 

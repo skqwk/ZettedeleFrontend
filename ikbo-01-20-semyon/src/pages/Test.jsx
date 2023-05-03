@@ -4,9 +4,11 @@ import NoteMenu from "../components/UI/notemenu/NoteMenu";
 import Input from "../components/UI/input/Input";
 import {useProfile} from "../hooks/useProfile";
 import {loadNotesEvent} from "../store/vaultReducer";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {getCaretPosition} from "../utils/CarretPosition";
 import TextArea from "../components/UI/textarea/TextArea";
+import {EventService} from "../API/EventService";
+import {NoteWebLoader} from "../core/web/NoteWebLoader";
 
 const Test = () => {
     const [token, setToken] = useState('');
@@ -16,6 +18,7 @@ const Test = () => {
     const [linkedNote, setLinkedNote] = useState(null);
     const dispatch = useDispatch();
     const [caret, setCaret] = useState(0);
+    const auth = useSelector(state => state.auth);
 
     const click = () => {
         console.log('Click!');
@@ -64,7 +67,13 @@ const Test = () => {
 
 
     useEffect(() => {
-        dispatch(loadNotesEvent({username: nowUser}));
+        EventService.getAllEvents(auth.authToken)
+            .then(rs => {
+                console.log("Get all events!")
+                console.log(rs.data)
+                let vaults = NoteWebLoader.applyServerEvents(rs.data);
+                dispatch(loadNotesEvent({vaults}));
+            })
     }, [])
 
     return (<div>

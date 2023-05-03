@@ -3,13 +3,16 @@ import Sidebar from "../paragraph/sidebar/Sidebar";
 import SidebarButton from "../paragraph/sidebar/SidebarButton";
 import {useProfile} from "../../../hooks/useProfile";
 import {FlushUpdater} from "../../../core/filesystem/FlushUpdater";
+import {useSelector} from "react-redux";
 
 const NoteItem = ({link, remove, setNoteId, parentNote, vaultId}) => {
     const nowUser = useProfile();
+    const auth = useSelector(state => state.auth);
+
 
     const openLink = (noteId) => {
         console.log(`Open link note with id = ${noteId}`);
-        FlushUpdater.flushUpdates(parentNote, vaultId, nowUser);
+        FlushUpdater.flushUpdates(parentNote, vaultId, nowUser, auth.authToken);
         setNoteId(noteId);
     }
 

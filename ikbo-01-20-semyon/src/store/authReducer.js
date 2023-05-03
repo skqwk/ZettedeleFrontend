@@ -1,6 +1,6 @@
 const defaultState = {
-    isAuth: false,
-    authToken: null
+    isAuth: true,
+    authToken: "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJVU0VSIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XSwiaWF0IjoxNjgzMDg2MTczLCJleHAiOjE2ODQyOTU3NzN9.Sw6zWy3BMh_h8P81d4X1SygIC-Vx2gor0VK-g9uRTuxQJLcrfF-TMnrdTThVNoqL"
 }
 
 const LOGOUT = 'LOGOUT';

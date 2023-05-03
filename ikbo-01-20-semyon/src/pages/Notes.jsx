@@ -11,11 +11,14 @@ import CreateNoteForm from "../components/note/v2/CreateNoteForm";
 import {useProfile} from "../hooks/useProfile";
 import CreateVaultForm from "../components/note/v2/CreateVaultForm";
 import EditVaultForm from "../components/note/v2/EditVaultForm";
+import {EventService} from "../API/EventService";
+import {NoteWebLoader} from "../core/web/NoteWebLoader";
 
 
 const Notes = () => {
     const [vaultId, setVaultId] = useState('');
     const [noteId, setNoteId] = useState(null);
+    const auth = useSelector(state => state.auth);
 
     const [isOpenCreateNoteForm, setOpenCreateNoteForm] = useState(false);
     const [isOpenCreateVaultForm, setOpenCreateVaultForm] = useState(false);
@@ -36,7 +39,13 @@ const Notes = () => {
 
 
     useEffect(() => {
-        dispatch(loadNotesEvent({username: nowUser}));
+        EventService.getAllEvents(auth.authToken)
+            .then(rs => {
+                console.log("Get all events!")
+                console.log(rs.data)
+                let vaults = NoteWebLoader.applyServerEvents(rs.data);
+                dispatch(loadNotesEvent({vaults}));
+            })
     }, [])
     const openCreateNewVault = () => {
         setOpenCreateVaultForm(true);

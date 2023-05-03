@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import Modal from "../../UI/modal/Modal";
 import Input from "../../UI/input/Input";
 import Button from "../../UI/button/Button";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useProfile} from "../../../hooks/useProfile";
 import {createVaultEvent} from "../../../store/vaultReducer";
 import {v4} from 'uuid';
@@ -12,6 +12,7 @@ const CreateVaultForm = ({visible, setVisible}) => {
     const dispatch = useDispatch();
     const nowUser = useProfile();
     const [name, setName] = useState('');
+    const auth = useSelector(state => state.auth);
 
     const close = () => {
         setName('');
@@ -19,7 +20,7 @@ const CreateVaultForm = ({visible, setVisible}) => {
     }
 
     const createVault = () => {
-        dispatch(createVaultEvent({vaultId: v4(), name, nowUser}))
+        dispatch(createVaultEvent({vaultId: v4(), name, nowUser, authToken: auth.authToken}))
         setVisible(false);
     }
 

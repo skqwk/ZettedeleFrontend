@@ -1,10 +1,10 @@
-import {toJson} from "../../utils/JsonUtil";
 import {NoteManager} from "../NoteManager";
-import {DATA_PATH} from "../config";
+import {EventService} from "../../API/EventService";
+
 export class FlushUpdater {
 
 
-    static flushUpdates(noteId, vaultId, nowUser) {
+    static flushUpdates(noteId, vaultId, nowUser, authToken) {
         let notePath = ""; // join(DATA_PATH, nowUser, vaultId, noteId);
 
         console.log(notePath);
@@ -13,8 +13,14 @@ export class FlushUpdater {
         if (Object.keys(NoteManager.updateEvents.REMOVE_NOTE).length === 0) {
             // Если заметка создана впервые - создаем файл
             if (Object.keys(NoteManager.updateEvents.CREATE_NOTE).length !== 0) {
-                let createNoteMessage = NoteManager.updateEvents.CREATE_NOTE[noteId];
-                // fs.writeFileSync(notePath, toJson(createNoteMessage));
+                let events = [NoteManager.updateEvents.CREATE_NOTE[noteId]];
+                EventService.sendAllEvents(events, authToken)
+                    .then(rs => {
+                        console.log("CREATE NOTE SEND RQ");
+                        console.log(rs);
+                    });
+
+                // fs.writeFileSync(notePath, JSON.stringify(createNoteMessage));
             }
 
             let fieldUpdates = NoteManager.updateEvents.UPDATE_NOTE.UPDATE_FIELDS;
@@ -50,7 +56,12 @@ export class FlushUpdater {
             console.log('EVENTS FOR FLUSH');
             console.log(events);
             let sortedEvents = this.sortEvents(events);
-            // sortedEvents.forEach(event => fs.appendFileSync(notePath, toJson(event)));
+            let eventsForSent = sortedEvents;
+            console.log(eventsForSent);
+            EventService.sendAllEvents(eventsForSent, authToken)
+                .then(rs => console.log(rs));
+
+            // sortedEvents.forEach(event => fs.appendFileSync(notePath, JSON.stringify(event)));
 
         } else {
             // Если заметка была создана в эту же сессию - ничего делать не нужно
@@ -58,8 +69,12 @@ export class FlushUpdater {
 
             // Если была удалена - можно опустить все обновления
             // и записать только информацию об удалении
+            let events = [NoteManager.updateEvents.REMOVE_NOTE[noteId]];
 
-            // fs.appendFileSync(notePath, toJson(NoteManager.updateEvents.REMOVE_NOTE[noteId]));
+            EventService.sendAllEvents(events, authToken)
+                .then(rs => console.log(rs));
+
+            // fs.appendFileSync(notePath, JSON.stringify(NoteManager.updateEvents.REMOVE_NOTE[noteId]));
         }
         console.log(NoteManager.updateEvents);
         NoteManager.clearUpdateEvents();

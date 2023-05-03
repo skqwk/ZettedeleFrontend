@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useProfile} from "../../../hooks/useProfile";
 import {removeVaultEvent, updateVaultEvent} from "../../../store/vaultReducer";
 import Modal from "../../UI/modal/Modal";
@@ -13,6 +13,7 @@ const EditVaultForm = ({vault, visible, setVisible, setVaultId}) => {
     const dispatch = useDispatch();
     const nowUser = useProfile();
     const [formVault, setFormVault] = useState(vault);
+    const auth = useSelector(state => state.auth);
 
     useEffect(() => {
         setFormVault(vault);
@@ -23,7 +24,7 @@ const EditVaultForm = ({vault, visible, setVisible, setVaultId}) => {
             let updatedData = diff(vault, formVault);
             console.log(updatedData);
             if (Object.keys(updatedData).length !== 0) {
-                dispatch(updateVaultEvent({vaultId: vault.id, nowUser, updatedData}))
+                dispatch(updateVaultEvent({vaultId: vault.id, nowUser, updatedData, authToken: auth.authToken}))
             }
             setVisible(false);
         }
@@ -32,7 +33,7 @@ const EditVaultForm = ({vault, visible, setVisible, setVaultId}) => {
     const removeVault = () => {
         setVaultId('');
         setVisible(false);
-        dispatch(removeVaultEvent({vaultId: vault.id, nowUser}));
+        dispatch(removeVaultEvent({vaultId: vault.id, nowUser, authToken: auth.authToken}));
     }
 
 

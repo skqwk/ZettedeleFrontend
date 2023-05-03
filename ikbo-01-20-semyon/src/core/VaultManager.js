@@ -1,10 +1,11 @@
 import {HLC} from "./clock/HLC";
+import {EventService} from "../API/EventService";
 
 
 export const VAULT_STATE_FILE = 'vault.state';
 
 export class VaultManager {
-    static createVault(payload) {
+    static createVault(payload, authToken) {
         // let vaultPath = join(DATA_PATH, payload.nowUser, payload.vaultId);
         // let vaultPathState = this.getVaultPathState(payload);
 
@@ -17,11 +18,14 @@ export class VaultManager {
             }
         }
 
+        EventService.sendAllEvents([createVaultMessage], authToken)
+            .then(rs => console.log(rs));
+
         // fs.mkdirSync(vaultPath);
         // fs.writeFileSync(vaultPathState, toJson(createVaultMessage));
     }
 
-    static removeVault(payload) {
+    static removeVault(payload, authToken) {
         // let vaultPathState = this.getVaultPathState(payload);
 
         let removeVaultMessage = {
@@ -31,10 +35,13 @@ export class VaultManager {
             payload: {}
         }
 
+        EventService.sendAllEvents([removeVaultMessage], authToken)
+            .then(rs => console.log(rs));
+
         // fs.appendFileSync(vaultPathState, toJson(removeVaultMessage));
     }
 
-    static updateVault(payload) {
+    static updateVault(payload, authToken) {
         // let vaultPathState = this.getVaultPathState(payload);
 
         let updateVaultMessage = {
@@ -43,6 +50,10 @@ export class VaultManager {
             id: payload.vaultId,
             payload: payload.body
         }
+
+
+        EventService.sendAllEvents([updateVaultMessage], authToken)
+            .then(rs => console.log(rs));
 
         // fs.appendFileSync(vaultPathState, toJson(updateVaultMessage));
     }

@@ -4,10 +4,14 @@ import {VAULT_STATE_FILE} from "../VaultManager";
 import {VaultRFA} from "../VaultRFA";
 import {ParagraphRGA} from "../ParagraphRGA";
 import {Mapper} from "../Mapper";
+import {HybridTimestamp} from "../clock/HybridTimestamp";
+import {HLC} from "../clock/HLC";
+import {EventApplier} from "../EventApplier";
 const fs = window.require('fs');
 const {join} = window.require('path');
 
 export class NoteFileLoader {
+
 
     static loadNotesInMemory(nowUser) {
         console.log(`Now user = ${nowUser}`);

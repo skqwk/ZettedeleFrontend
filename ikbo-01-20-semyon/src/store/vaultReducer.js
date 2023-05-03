@@ -1,6 +1,8 @@
 import {NoteManager} from "../core/NoteManager";
 import {HLC} from "../core/clock/HLC";
 import {VaultManager} from "../core/VaultManager";
+import {EventService} from "../API/EventService";
+import {NoteWebLoader} from "../core/web/NoteWebLoader";
 
 // Инициализируем стартовое состояние из NoteManager
 // NoteManager.initState()
@@ -73,7 +75,7 @@ export const vaultReducer = (state = defaultState, action) => {
 
 const createVaultUseCase = (state, payload) => {
     console.log("Create vault");
-    VaultManager.createVault(payload)
+    VaultManager.createVault(payload, payload.authToken)
     let newVault = {id: payload.vaultId, createdAt: '', name: payload.name, notes: []};
     console.log(newVault);
     console.log({
@@ -86,7 +88,7 @@ const createVaultUseCase = (state, payload) => {
 
 const removeVaultUseCase = (state, payload) => {
     console.log("Remove vault");
-    VaultManager.removeVault(payload)
+    VaultManager.removeVault(payload, payload.authToken)
     return {
         vaults: [...state.vaults.filter(v => v.id !== payload.vaultId)]
     }
@@ -103,7 +105,7 @@ const updateVaultUseCase = (state, payload) => {
         body: {
             ...payload.updatedData
         },
-    });
+    }, payload.authToken);
 
     return {
         vaults: [...state.vaults.filter(v => v.id !== payload.vaultId), newVault]
@@ -175,9 +177,7 @@ const removeNoteUseCase = (state, payload) => {
 
 
 const loadNotesUseCase = (state, payload) => {
-    let vaults = [] // NoteFileLoader.loadNotesInMemory(payload.username);
-
-    return {...state, vaults: vaults};
+    return {...state, vaults: payload.vaults};
 }
 
 const createParagraphUseCase = (state, payload) => {
