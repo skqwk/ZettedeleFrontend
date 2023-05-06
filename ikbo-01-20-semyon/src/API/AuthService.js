@@ -1,10 +1,10 @@
 import axios from "axios";
+import {API, getHeaders} from "./config";
 
 export default class AuthService {
-    static API = 'http://localhost:8080';
 
     static async auth(login, password) {
-        const rs = await axios.post(`${this.API}/auth`, {
+        const rs = await axios.post(`${API}/auth`, {
             login,
             password
         });
@@ -14,18 +14,15 @@ export default class AuthService {
     }
 
     static async register(login, password) {
-        return await axios.post(`${this.API}/register`, {
+        return await axios.post(`${API}/register`, {
             login,
             password
         })
     }
 
     static async getNodeId(authToken) {
-        const rs = await axios.get(`${this.API}/node`, {
-            headers: {
-                'Authorization': authToken,
-                'Access-Control-Allow-Origin': '*'
-            }
+        const rs = await axios.get(`${API}/node`, {
+            headers: getHeaders(authToken)
         });
         console.log(rs)
         return rs;

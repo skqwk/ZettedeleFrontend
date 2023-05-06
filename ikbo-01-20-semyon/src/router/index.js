@@ -14,7 +14,7 @@ export const routes = [
 
 export const adminRoutes = [
     {name: "Профиль", to: "/profile", element: Profile},
-    {name: "Пользователи", to: "/user", element: Users},
+    {name: "Пользователи", to: "/users", element: Users},
 ]
 
 export const defaultRoutes = [

@@ -8,17 +8,17 @@ import {getParagraphs} from "../../../core/getParagraphs";
 import {useProfile} from "../../../hooks/useProfile";
 import NoteFormLink from "./NoteFormLink";
 import NoteToolBar from "./NoteToolBar";
+import {colors} from "../../../core/ui/colors";
 
 const NoteFormV2 = ({address, formNote, remove, setNoteId}) => {
     const dispatch = useDispatch();
     const paragraphs = getParagraphs(formNote);
     const nowUser = useProfile();
-    const colors = ['white', '#F59475', '#F9C975', '#E4F693', '#B388F9', '#13E8FB'];
 
     const defineColor = (note) => {
         return note.color
             ? note.color
-            : colors[0];
+            : colors.white;
     }
 
     const chooseColor = (color) => {
@@ -55,7 +55,7 @@ const NoteFormV2 = ({address, formNote, remove, setNoteId}) => {
             )
             }
             <NoteFormLink links={formNote.links} address={address} setNoteId={setNoteId}/>
-            <NoteToolBar remove={remove} chooseColor={chooseColor} colors={colors} formNoteColor={formNote.color}/>
+            <NoteToolBar remove={remove} chooseColor={chooseColor} formNoteColor={formNote.color}/>
         </div>
     );
 };

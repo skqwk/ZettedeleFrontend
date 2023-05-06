@@ -1,25 +1,38 @@
 import axios from "axios";
+import {API, getHeaders} from "./config";
 
 export class UserService {
-    static API = 'http://localhost:8080';
 
     static async getProfile(authToken) {
-        const rs = await axios.get(`${this.API}/profile`, {
-            headers: {
-                'Authorization': authToken,
-                'Access-Control-Allow-Origin': '*'
-            }
+        const rs = await axios.get(`${API}/profile`, {
+            headers: getHeaders(authToken)
         });
         console.log(rs)
         return rs;
     }
 
     static async getUsers(authToken) {
-        const rs = await axios.get(`${this.API}/admin/users`, {
-            headers: {
-                'Authorization': authToken,
-                'Access-Control-Allow-Origin': '*'
-            }
+        const rs = await axios.get(`${API}/admin/users`, {
+            headers: getHeaders(authToken)
+        });
+        console.log(rs)
+        return rs;
+    }
+
+    static async changeVisibility(authToken, isVisible) {
+        const rs = await axios.post(`${API}/changeVisibility`, {}, {
+            params: {
+                isVisible
+            },
+            headers: getHeaders(authToken)
+        });
+        console.log(rs)
+        return rs;
+    }
+
+    static async getVisibility(authToken) {
+        const rs = await axios.get(`${API}/visibility`, {
+            headers: getHeaders(authToken)
         });
         console.log(rs)
         return rs;

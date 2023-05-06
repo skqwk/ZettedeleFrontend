@@ -11,3 +11,11 @@
     list-style-type: none;
     cursor: pointer;
 }
+
+.navbarItem a {
+    text-decoration: none;
+}
+
+.active a {
+    font-weight: bold;
+}

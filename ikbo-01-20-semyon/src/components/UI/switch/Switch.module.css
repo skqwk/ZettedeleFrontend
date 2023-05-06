@@ -4,7 +4,6 @@
     display: inline-block;
     width: 60px;
     height: 34px;
-    margin-bottom: 30px;
 }
 
 /* Hide default HTML checkbox */
@@ -62,9 +61,15 @@ input:checked + .slider:before {
     border-radius: 50%;
 }
 
+.switchContainer {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
 .switchContainer p {
     font-size: 14px;
     color: lightgrey;
     letter-spacing: 1px;
-    margin-bottom: 5px;
+    margin-right: 20px;
 }
