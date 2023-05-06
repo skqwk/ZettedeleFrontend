@@ -1,0 +1,23 @@
+.hint {
+    transition: 0.2s;
+    opacity: 0.8;
+    width: fit-content;
+    background-color: rgb(255, 244, 229);
+    padding: 6px 16px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.body {
+    display: flex;
+    padding: 20px;
+    align-items: flex-start;
+}
+
+.icon {
+    margin-right: 12px;
+}
+
+.content {
+    color: rgb(102, 60, 0);
+}

@@ -1,17 +1,15 @@
-import logo from './logo.png';
-import './App.css';
+import './styles/App.css';
+import React from 'react';
+import {Provider} from "react-redux";
+import {store} from "./store";
+import WrappedApp from "./WrappedApp";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Простое React-приложение
-        </p>
-      </header>
-    </div>
-  );
+
+const App = () => {
+    return (
+        <Provider store={store}>
+            <WrappedApp/>
+        </Provider>
+    );
 }
-
 export default App;

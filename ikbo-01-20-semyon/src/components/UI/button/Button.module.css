@@ -1,0 +1,18 @@
+.button {
+    transition: 0.3s;
+    padding: 10px 30px;
+    border-radius: 50px;
+    text-align: center;
+    align-content: center;
+    cursor: pointer;
+    outline: none;
+    border: 1px solid #d4d4d4;
+    font-size: 18px;
+    color: white;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+.disabled {
+    cursor: auto;
+}

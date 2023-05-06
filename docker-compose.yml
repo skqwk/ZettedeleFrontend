@@ -1,7 +1,7 @@
 version: '3.8'
 services:
-  react-ui:
-    container_name: react-ui
+  zettedele-frontend:
+    container_name: zettedele-frontend
     build: ./${FOLDER}
     ports:
       - "${REACT_EXTERNAL_PORT}:${REACT_INTERNAL_PORT}"
