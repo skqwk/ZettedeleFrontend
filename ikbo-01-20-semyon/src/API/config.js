@@ -1,4 +1,4 @@
-export const API = 'http://localhost:8080';
+export const API = 'http://95.163.233.136:8080';
 
 export const getHeaders = (authToken) => {
     return {
