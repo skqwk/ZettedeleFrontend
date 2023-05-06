@@ -7,7 +7,7 @@ const RoutedApp = () => {
     return (
         <BrowserRouter>
             <Link to="/about" style={{textDecoration: 'none'}}>
-                <h1>Zettedele</h1>
+                <h1>Коля привет!</h1>
             </Link>
             <Navbar/>
             <AppRouter/>
