@@ -12,6 +12,9 @@ export class UserService {
     }
 
     static async getUsers(authToken) {
+        console.log(API);
+        console.log(process.env);
+        console.log(process.argv);
         const rs = await axios.get(`${API}/admin/users`, {
             headers: getHeaders(authToken)
         });

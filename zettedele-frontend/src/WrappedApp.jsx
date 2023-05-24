@@ -8,6 +8,7 @@ const WrappedApp = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        console.log(process.env);
         let authToken = localStorage.getItem("authToken");
         let role = localStorage.getItem("role");
         let nodeId = localStorage.getItem("nodeId");

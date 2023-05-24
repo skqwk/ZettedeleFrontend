@@ -1,0 +1,33 @@
+.alert {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    transition: 0.2s;
+    width: fit-content;
+    background-color: rgb(253, 237, 237);
+    padding: 6px 16px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    animation-name: fadein;
+    animation-timing-function: ease-in;
+    animation-duration: 10s;
+}
+
+@keyframes fadein {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.body {
+    display: flex;
+    padding: 20px;
+    align-items: flex-start;
+}
+
+.icon {
+    margin-right: 12px;
+}
+
+.content {
+    color: rgb(95, 33, 32);
+}

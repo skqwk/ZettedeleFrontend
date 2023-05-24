@@ -1,4 +1,4 @@
-export const API = 'http://95.163.233.136:8080';
+export const API = `http://${process.env.REACT_APP_BACKEND_HOST}:8080`;
 
 export const getHeaders = (authToken) => {
     return {
