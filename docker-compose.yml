@@ -10,5 +10,13 @@ services:
     volumes:
       - './${FOLDER}:/app'
       - 'node_modules:/app/node_modules'
+    environment:
+      - BACKEND_HOST=${BACKEND_HOST}
+
 volumes:
   node_modules:
+
+networks:
+  default:
+    name: zettedele-net
+    external: true
